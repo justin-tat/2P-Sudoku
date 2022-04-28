@@ -6,7 +6,7 @@ const Login = () => {
   const [username, typeUsername] = React.useState('');
   const [password, typePassword] = React.useState('');
   return (
-    <View>
+    <View style={{flex: 1}}>
       <Text style={styles.title}>
         Login
       </Text>

@@ -9,14 +9,12 @@ const LandingPage = ({navigation}) => {
         title="Make An Account"
         color="#f194ff"
         onPress={() => {
-          Alert.alert('Trying to make an account');
           navigation.navigate('SignUp');
         }}
       />
       <Button
         title="Login"
         onPress={() => {
-          Alert.alert('Trying to login');
           navigation.navigate('Login');
         }}
       />
@@ -24,7 +22,7 @@ const LandingPage = ({navigation}) => {
         title="Proceed Without An Account"
         color="#F62626"
         onPress={() => {
-          Alert.alert('Here is where the fun begins');
+          navigation.navigate('ActiveGame');
         }}
       />
     </SafeAreaView>
