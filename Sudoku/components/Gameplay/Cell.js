@@ -7,7 +7,9 @@ const Cell = props => {
   return (
     <TouchableOpacity
       style={[styles.button, styles[isOption]]}
-      onPress={props.clickCell}>
+      onPress={() => {
+        props.clickCell(props.xcor, props.ycor);
+      }}>
       <Text style={[styles[props.style], styles.cellText]}>{title}</Text>
     </TouchableOpacity>
   );

@@ -11,10 +11,11 @@ const Row = props => {
           <Cell
             style={currStyle}
             title={number}
-            key={JSON.stringify([props.rowIndex, colIndex])}
-            onPress={() => {
-              Alert.alert('Number was pressed');
-            }}
+            key={`${parseInt(props.ycor, 10)} ${parseInt(colIndex, 10)}`}
+            xcor={colIndex}
+            ycor={props.ycor}
+            // key={JSON.stringify([props.rowIndex, colIndex])}
+            clickCell={props.clickCell}
           />
         );
       })}

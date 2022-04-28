@@ -13,17 +13,17 @@ class ActiveGame extends React.Component {
     };
     this.clickCell = this.clickCell.bind(this);
   }
-  clickCell(event) {
-    Alert.alert('test');
-    Alert.alert(event);
-    console.log('hello');
+  clickCell(xcor, ycor) {
+    this.setState({
+      cellSelected: [xcor, ycor],
+    });
   }
 
   render() {
     return (
       <View style={styles.gameScreen}>
         <Board board={this.state.board} clickCell={this.clickCell} />
-        <Text> Cell Selected: {}</Text>
+        <Text> Cell Selected: {this.state.cellSelected}</Text>
         <Options />
       </View>
     );

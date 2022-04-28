@@ -12,6 +12,7 @@ const Board = props => {
             currRow={row}
             index={rowIndex}
             key={rowIndex}
+            ycor={rowIndex}
             clickCell={props.clickCell}
           />
         );
