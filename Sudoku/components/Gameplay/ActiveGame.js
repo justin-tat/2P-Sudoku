@@ -2,13 +2,14 @@ import React from 'react';
 import {generateUniqueBoard} from '../globals.js';
 import Board from './Board.js';
 import Options from './Options.js';
-import {View, StyleSheet, Text, Alert} from 'react-native';
+import {StyleSheet, Text} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 class ActiveGame extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      board: generateUniqueBoard(15),
+      board: generateUniqueBoard(25),
       cellSelected: '',
     };
     this.clickCell = this.clickCell.bind(this);
@@ -21,11 +22,15 @@ class ActiveGame extends React.Component {
 
   render() {
     return (
-      <View style={styles.gameScreen}>
+      <SafeAreaView style={styles.gameScreen}>
         <Board board={this.state.board} clickCell={this.clickCell} />
-        <Text> Cell Selected: {this.state.cellSelected}</Text>
+        <Text>
+          {' '}
+          Cell Selected:{' '}
+          {`row ${this.state.cellSelected[1]} column: ${this.state.cellSelected[0]} `}
+        </Text>
         <Options />
-      </View>
+      </SafeAreaView>
     );
   }
 }

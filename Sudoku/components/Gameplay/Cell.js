@@ -17,10 +17,12 @@ const Cell = props => {
 
 const styles = StyleSheet.create({
   button: {
-    shadowColor: 'rgba(0,0,0, .4)', // IOS
-    shadowOffset: {height: 3, width: 3}, // IOS
-    shadowOpacity: 1, // IOS
-    shadowRadius: 1, //IOS
+    //Elevation
+    // shadowColor: 'rgba(0,0,0, .4)', // IOS
+    // shadowOffset: {height: 3, width: 3}, // IOS
+    // shadowOpacity: 1, // IOS
+    // shadowRadius: 1, //IOS
+    //Actual Cell
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 10,
