@@ -8,19 +8,22 @@ const SubGrid = props => {
       <SubGridRow
         board={props.board}
         startingRow={props.startingRow}
-        clickCell={props.clickCell}
+        selectTile={props.selectTile}
+        selectedTile={props.selectedTile}
         startingCol={props.startingCol}
       />
       <SubGridRow
         board={props.board}
         startingRow={parseInt(props.startingRow, 10) + 1}
-        clickCell={props.clickCell}
+        selectTile={props.selectTile}
+        selectedTile={props.selectedTile}
         startingCol={props.startingCol}
       />
       <SubGridRow
         board={props.board}
         startingRow={parseInt(props.startingRow, 10) + 2}
-        clickCell={props.clickCell}
+        selectTile={props.selectTile}
+        selectedTile={props.selectedTile}
         startingCol={props.startingCol}
       />
     </View>
@@ -31,7 +34,8 @@ const styles = StyleSheet.create({
   subGrid: {
     flexDirection: 'column',
     //backgroundColor: '#BEBEBE',
-    backgroundColor: '#2ecc71',
+    backgroundColor: '#27ae60',
+    //backgroundColor: '#718c8d',
     justifyContent: 'space-evenly',
   },
 });

@@ -23,7 +23,8 @@ const SubGridRow = props => {
         key={`RowIndex: ${props.startingRow} columnIndex: ${props.startingCol}`}
         xcor={colIndex}
         ycor={rowIndex}
-        clickCell={props.clickCell}
+        selectTile={props.selectTile}
+        selectedTile={props.selectedTile}
       />
       <Cell
         style={isZero[1]}
@@ -32,7 +33,8 @@ const SubGridRow = props => {
         key={`RowIndex: ${props.startingRow} columnIndex: ${colIndex + 1}`}
         xcor={colIndex + 1}
         ycor={rowIndex}
-        clickCell={props.clickCell}
+        selectTile={props.selectTile}
+        selectedTile={props.selectedTile}
       />
       <Cell
         style={isZero[2]}
@@ -41,7 +43,8 @@ const SubGridRow = props => {
         key={`RowIndex: ${props.startingRow} columnIndex: ${colIndex + 2}`}
         xcor={colIndex + 2}
         ycor={rowIndex}
-        clickCell={props.clickCell}
+        selectTile={props.selectTile}
+        selectedTile={props.selectedTile}
       />
     </View>
   );

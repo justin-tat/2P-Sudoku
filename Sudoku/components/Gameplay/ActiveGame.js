@@ -1,6 +1,6 @@
 import React from 'react';
 import {generateUniqueBoard} from '../globals.js';
-import Board from './Board.js';
+import Board from './Grid/Board.js';
 import Options from './Options.js';
 import {StyleSheet, Text} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -8,28 +8,50 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 class ActiveGame extends React.Component {
   constructor(props) {
     super(props);
+    const board = generateUniqueBoard(25);
     this.state = {
-      board: generateUniqueBoard(25),
-      cellSelected: '',
+      currentBoard: board[1],
+      solutionBoard: board[2],
+      selectedTile: [],
+      selectedOption: 0,
     };
-    this.clickCell = this.clickCell.bind(this);
+    this.selectTile = this.selectTile.bind(this);
+    this.selectOption = this.selectOption.bind(this);
   }
-  clickCell(xcor, ycor) {
+  selectTile(xcor, ycor) {
     this.setState({
-      cellSelected: [xcor, ycor],
+      selectedTile: [xcor, ycor],
     });
+  }
+  selectOption(num) {
+    // eslint-disable-next-line prettier/prettier
+    if (+num === this.state.solutionBoard[this.state.selectedTile[1]][this.state.selectedTile[0]]) {
+      let updatedBoard = this.state.currentBoard;
+      // eslint-disable-next-line prettier/prettier
+      updatedBoard[this.state.selectedTile[1]][this.state.selectedTile[0]] = +num;
+      this.setState({
+        currentBoard: updatedBoard,
+        selectedTile: [],
+        selectedOption: num,
+      });
+    }
   }
 
   render() {
     return (
       <SafeAreaView style={styles.gameScreen}>
-        <Board board={this.state.board} clickCell={this.clickCell} />
+        <Board
+          board={this.state.currentBoard}
+          selectTile={this.selectTile}
+          selectedTile={this.state.selectedTile}
+        />
         <Text>
           {' '}
           Cell Selected:{' '}
-          {`row ${this.state.cellSelected[1]} column: ${this.state.cellSelected[0]} `}
+          {`row ${this.state.selectedTile[1]} column: ${this.state.selectedTile[0]} `}
         </Text>
-        <Options />
+        <Text> Option Selected: {this.state.selectedOption}</Text>
+        <Options selectOption={this.selectOption} />
       </SafeAreaView>
     );
   }

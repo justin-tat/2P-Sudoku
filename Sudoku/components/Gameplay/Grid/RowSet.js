@@ -8,19 +8,22 @@ const RowSet = props => {
       <SubGrid
         board={props.board}
         startingRow={props.startingRow}
-        clickCell={props.clickCell}
+        selectTile={props.selectTile}
+        selectedTile={props.selectedTile}
         startingCol={0}
       />
       <SubGrid
         board={props.board}
         startingRow={props.startingRow}
-        clickCell={props.clickCell}
+        selectTile={props.selectTile}
+        selectedTile={props.selectedTile}
         startingCol={3}
       />
       <SubGrid
         board={props.board}
         startingRow={props.startingRow}
-        clickCell={props.clickCell}
+        selectTile={props.selectTile}
+        selectedTile={props.selectedTile}
         startingCol={6}
       />
     </View>
@@ -31,6 +34,7 @@ const styles = StyleSheet.create({
   rowSet: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
+    //justifyContent: 'center',
   },
 });
 

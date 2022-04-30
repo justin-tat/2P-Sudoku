@@ -8,35 +8,26 @@ const Board = props => {
   return (
     <View style={styles.board}>
       <RowSet
-        board={board[1]}
+        board={board}
         startingRow={0}
         key={'RowSet 1'}
-        clickCell={props.clickCell}
+        selectTile={props.selectTile}
+        selectedTile={props.selectedTile}
       />
       <RowSet
-        board={board[1]}
+        board={board}
         startingRow={3}
         key={'RowSet 2'}
-        clickCell={props.clickCell}
+        selectTile={props.selectTile}
+        selectedTile={props.selectedTile}
       />
       <RowSet
-        board={board[1]}
+        board={board}
         startingRow={6}
         key={'RowSet 3'}
-        clickCell={props.clickCell}
+        selectTile={props.selectTile}
+        selectedTile={props.selectedTile}
       />
-
-      {/* {board[1].map((row, rowIndex) => {
-        return (
-          <Row
-            currRow={row}
-            index={rowIndex}
-            key={rowIndex}
-            ycor={rowIndex}
-            clickCell={props.clickCell}
-          />
-        );
-      })} */}
     </View>
   );
 };
@@ -45,6 +36,7 @@ const styles = StyleSheet.create({
   board: {
     flex: 7,
     justifyContent: 'space-evenly',
+    //justifyContent: 'center',
     flexDirection: 'column',
     backgroundColor: 'black',
   },
