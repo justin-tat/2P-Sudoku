@@ -58,9 +58,6 @@ const styles = StyleSheet.create({
   player: {
     color: 'black',
   },
-  option: {
-    color: 'green',
-  },
 });
 
 export default Cell;
