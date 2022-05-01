@@ -78,7 +78,6 @@ class ActiveGame extends React.Component {
           selectTile={this.selectTile}
           selectedTile={this.state.selectedTile}
         />
-        <Text> Mistakes Made: {this.state.numMistakes}</Text>
         <Options selectOption={this.selectOption} />
       </SafeAreaView>
     );

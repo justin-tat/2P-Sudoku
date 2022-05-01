@@ -8,9 +8,7 @@ const InfoBar = props => {
         <Text style={styles.childText}>Your Rating: {props.rating}</Text>
       </View>
       <View style={styles.infoBarChild}>
-        <Text style={styles.childText}>
-          Number of Mistakes: {props.numMistakes}
-        </Text>
+        <Text style={styles.childText}>Mistakes Made: {props.numMistakes}</Text>
       </View>
       <View style={styles.infoBarChild}>
         <Text style={styles.childText}>Current Game Time: {props.time}</Text>
@@ -23,12 +21,16 @@ const styles = StyleSheet.create({
   infoBar: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    flex: 1,
-    borderRadius: 10,
+    flex: 0.7,
+    marginBottom: 10,
+    backgroundColor: 'black',
   },
   infoBarChild: {
     alignItems: 'center',
     justifyContent: 'center',
+    paddingHorizontal: 5,
+    borderRadius: 10,
+    backgroundColor: '#5d9db9',
   },
   childText: {
     fontWeight: 'bold',
