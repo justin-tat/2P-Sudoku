@@ -5,6 +5,7 @@ import Options from './Options.js';
 import InfoBar from './InfoBar.js';
 import {StyleSheet, Text} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import axios from 'axios';
 
 class ActiveGame extends React.Component {
   constructor(props) {
@@ -31,6 +32,9 @@ class ActiveGame extends React.Component {
     }, 1000);
     this.setState({
       timerID: timerID,
+    });
+    axios.get('http://localhost:3000').then(res => {
+      console.log(res.data);
     });
   }
 
