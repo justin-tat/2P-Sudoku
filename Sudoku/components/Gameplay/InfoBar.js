@@ -5,9 +5,6 @@ const InfoBar = props => {
   return (
     <View style={styles.infoBar}>
       <View style={styles.infoBarChild}>
-        <Text style={styles.childText}>Your Rating: {props.rating}</Text>
-      </View>
-      <View style={styles.infoBarChild}>
         <Text style={styles.childText}>Mistakes Made: {props.numMistakes}</Text>
       </View>
       <View style={styles.infoBarChild}>
@@ -23,7 +20,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     flex: 0.7,
     marginBottom: 10,
-    backgroundColor: 'black',
+    //backgroundColor: 'black',
   },
   infoBarChild: {
     alignItems: 'center',
@@ -34,7 +31,7 @@ const styles = StyleSheet.create({
   },
   childText: {
     fontWeight: 'bold',
-    fontSize: 10,
+    fontSize: 15,
   },
 });
 

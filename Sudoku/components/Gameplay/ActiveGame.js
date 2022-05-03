@@ -10,7 +10,8 @@ import axios from 'axios';
 class ActiveGame extends React.Component {
   constructor(props) {
     super(props);
-    const board = generateUniqueBoard(25);
+    let holes = 25;
+    const board = generateUniqueBoard(holes);
     this.state = {
       rating: 1000,
       currentBoard: board[1],
@@ -18,7 +19,7 @@ class ActiveGame extends React.Component {
       selectedTile: [],
       selectedOption: 0,
       numMistakes: 0,
-      tilesLeft: 25, //Same number as generate Unique Board
+      tilesLeft: holes, //Same number as generate Unique Board
       time: 0,
       timerID: 0,
     };
@@ -40,6 +41,22 @@ class ActiveGame extends React.Component {
 
   componentWillUnmount() {
     clearInterval(this.state.timerID);
+  }
+
+  isCorrect() {
+    let playerBoard = this.state.currentBoard;
+    let solBoard = this.state.solutionBoard;
+    let correctness = {isIncorrect: false, incorrectTiles: []};
+
+    for (let row = 0; row < 9; row++) {
+      for (let col = 0; col < 9; col++) {
+        if (playerBoard[row][col] !== solBoard[row][col]) {
+          correctness.incorrectTiles.push({row: row, col: col});
+          correctness.isIncorrect = true;
+        }
+      }
+    }
+    return correctness;
   }
 
   selectTile(xcor, ycor) {
