@@ -11,9 +11,9 @@ import type {Node} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import Login from './components/Intro/Login.js';
-import LandingPage from './components/Intro/LandingPage.js';
-import SignUp from './components/Intro/SignUp.js';
+import Login from './components/Auth/Login.js';
+import LandingPage from './components/Auth/LandingPage.js';
+import SignUp from './components/Auth/SignUp.js';
 import ActiveGame from './components/Gameplay/ActiveGame.js';
 
 const Stack = createNativeStackNavigator();
