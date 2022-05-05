@@ -16,6 +16,10 @@ import LandingPage from './components/Auth/LandingPage.js';
 import SignUp from './components/Auth/SignUp.js';
 import ActiveGame from './components/Gameplay/ActiveGame.js';
 
+console.ignoredYellowBox = [
+  'Warning: ViewPropTypes will be removed from React Native',
+];
+
 const Stack = createNativeStackNavigator();
 
 const App: () => Node = () => {
