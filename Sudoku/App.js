@@ -15,6 +15,7 @@ import Login from './components/Auth/Login.js';
 import LandingPage from './components/Auth/LandingPage.js';
 import SignUp from './components/Auth/SignUp.js';
 import ActiveGame from './components/Gameplay/ActiveGame.js';
+import MainMenuLandingPage from './components/MainMenu/MainMenuLandingPage.js';
 
 console.ignoredYellowBox = [
   'Warning: ViewPropTypes will be removed from React Native',
@@ -27,10 +28,31 @@ const App: () => Node = () => {
     <SafeAreaProvider>
       <NavigationContainer>
         <Stack.Navigator initialRouteName="LandingPage">
-          <Stack.Screen name="LandingPage" component={LandingPage} />
-          <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="SignUp" component={SignUp} />
-          <Stack.Screen name="ActiveGame" component={ActiveGame} />
+          <Stack.Screen
+            name="LandingPage"
+            component={LandingPage}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="SignUp"
+            component={SignUp}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="ActiveGame"
+            component={ActiveGame}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="MainMenu"
+            component={MainMenuLandingPage}
+            options={{headerShown: false}}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>

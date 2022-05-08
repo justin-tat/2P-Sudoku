@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, Text, TouchableOpacity, Alert} from 'react-native';
+import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import {OutlinedTextField} from 'rn-material-ui-textfield';
 import axios from 'axios';
 
@@ -39,9 +39,11 @@ class SignUp extends React.Component {
         isValid = false;
       } else if (this.state[field].includes(' ')) {
         errorsDupe[field] = this.prefixes[field] + ' cannot contain spaces';
+        isValid = false;
       } else if (this.state[field].length > 30) {
         errorsDupe[field] =
           this.prefixes[field] + ' cannot be more than 30 characters';
+        isValid = false;
       } else {
         errorsDupe[field] = '';
       }
@@ -57,19 +59,52 @@ class SignUp extends React.Component {
       errorsDupe.newEmail = 'Please enter a valid email address';
       isValid = false;
     }
+    this.setState({
+      errors: errorsDupe,
+    });
     if (!isValid) {
-      this.setState({
-        errors: errorsDupe,
-      });
       return;
     }
     axios
-      .get('http://localhost:3000/users/getAccount', {
+      .get('http://localhost:3000/users/verifyAccount', {
         params: {username: this.state.newUsername, email: this.state.newEmail},
       })
+      .then(() => {
+        return axios.post(
+          'http://localhost:3000/' + 'users/makeAccount',
+          null,
+          {
+            params: {
+              username: this.state.newUsername,
+              email: this.state.newEmail,
+              password: this.state.newPassword,
+            },
+          },
+        );
+      })
+      .catch(err => {
+        console.log('Errored validating account info: ', err.response.data);
+        if (err.response.data === 'Username is already taken') {
+          errorsDupe.newUsername = err.response.data;
+          this.setState({
+            errors: errorsDupe,
+          });
+        } else if (err.response.data === 'Email has an account') {
+          errorsDupe.newEmail = err.response.data;
+          this.setState({
+            errors: errorsDupe,
+          });
+        }
+      })
       .then(response => {
-        console.log('Results: ', response);
+        this.props.navigation.navigate('Login');
+      })
+      .catch(err => {
+        console.log('Failed trying to make account', err);
       });
+    this.setState({
+      errors: errorsDupe,
+    });
   }
   render() {
     return (
@@ -122,9 +157,14 @@ class SignUp extends React.Component {
         <TouchableOpacity style={styles.button} onPress={this.submitSignUp}>
           <Text style={styles.title}>Sign Me Up!</Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => this.props.navigation.navigate('LandingPage')}>
+          <Text style={styles.title}> Home </Text>
+        </TouchableOpacity>
       </View>
     );
-  };
+  }
 }
 
 const styles = StyleSheet.create({

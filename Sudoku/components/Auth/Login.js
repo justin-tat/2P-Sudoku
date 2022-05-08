@@ -1,49 +1,117 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View, Text, Dimensions, Alert} from 'react-native';
-import { OutlinedTextField } from 'rn-material-ui-textfield'
+import { OutlinedTextField } from 'rn-material-ui-textfield';
+import axios from 'axios';
 
-const window = Dimensions.get("window");
-const screen = Dimensions.get("screen");
+// const window = Dimensions.get("window");
+// const screen = Dimensions.get("screen");
 
-const Login = () => {
-  const [username, typeUsername] = React.useState('');
-  const [password, typePassword] = React.useState('');
+class Login extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: '',
+      password: '',
+      errors: {
+        username: '',
+        password: '',
+      },
+    };
+    this.onChangeText = this.onChangeText.bind(this);
+    this.submitLogin = this.submitLogin.bind(this);
+    this.prefixes = {
+      username: 'Username',
+      password: 'Password',
+    };
+  }
+  onChangeText(event, field) {
+    this.setState({[field]: event.nativeEvent.text});
+  }
+  submitLogin() {
+    console.log(`username: ${this.state.username} password: ${this.state.password}`)
+    let errorsDupe = this.state.errors;
+    let isValid = true;
+    Object.keys(this.prefixes).forEach(field => {
+      if (this.state[field].length === 0) {
+        errorsDupe[field] = this.prefixes[field] + ' cannot be empty';
+        isValid = false;
+      } else if (this.state[field].includes(' ')) {
+        errorsDupe[field] = this.prefixes[field] + ' cannot include spaces';
+        isValid = false;
+      } else if (this.state[field].length > 30) {
+        errorsDupe[field] = this.prefixes[field] + ' cannot be more than 30 characters';
+        isValid = false;
+      } else {
+        errorsDupe[field] = '';
+      }
+    });
+    this.setState({
+      errors: errorsDupe,
+    });
+    //don't need to contact db if entries are invalid
+    if (!isValid) {
+      return;
+    }
+    axios.get('http://localhost:3000/' + 'users/getAccount', {
+      params: {username: this.state.username, password: this.state.password},
+    })
+    .then(() => {
+      console.log('Got back from looking for account');
+    })
+    .catch(err => {
+      if (err.response.data === 'Username not found') {
+        errorsDupe.username = err.response.data;
+      } else if (err.response.data === 'Password did not match that account') {
+        errorsDupe.password = err.response.data;
+      }
+      this.setState({
+        errors: errorsDupe,
+      });
+    });
 
-  return (
-    <View style={styles.login}>
-      <Text style={styles.title}>
-        Username
-      </Text>
-      <OutlinedTextField
-        label="Username"
-        containerStyle={styles.field}
-        onChange={(text) => {
-          typeUsername(text.nativeEvent.text);
-        }}
-        autoCapitalize="none"
-      />
-      <Text style={styles.title}>
-        Password
-      </Text>
-      <OutlinedTextField
-        label="Password"
-        containerStyle={styles.field}
-        onChange={(text) => {
-          typePassword(text.nativeEvent.text);
-        }}
-        autoCapitalize="none"
-      />
+  }
+  render() {
+    return (
+      <View style={styles.login}>
+        <Text style={styles.title}>
+          Username
+        </Text>
+        <OutlinedTextField
+          label="Username"
+          containerStyle={styles.field}
+          onChange={text => {
+            this.onChangeText(text, 'username');
+          }}
+          autoCapitalize="none"
+          error={this.state.errors.username}
+        />
+        <Text style={styles.title}>
+          Password
+        </Text>
+        <OutlinedTextField
+          label="Password"
+          containerStyle={styles.field}
+          onChange={(text) => {
+            this.onChangeText(text, 'password');
+          }}
+          autoCapitalize="none"
+          error={this.state.errors.password}
+        />
+        <TouchableOpacity
+        style={styles.button}
+        onPress={this.submitLogin}>
+        <Text style={styles.title}>Login</Text>
+      </TouchableOpacity>
       <TouchableOpacity
-      style={styles.button}
-      onPress={() => {
-        Alert.alert(username + " " + password);
-      }}>
-      <Text style={styles.title}>Login</Text>
-    </TouchableOpacity>
-    </View>
-  );
-};
+          style={styles.button}
+          onPress={() => this.props.navigation.navigate('LandingPage')}>
+          <Text style={styles.title}> Home </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   login: {
