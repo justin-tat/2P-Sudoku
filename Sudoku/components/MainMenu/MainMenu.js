@@ -4,41 +4,48 @@ import {StyleSheet, TouchableOpacity, Text} from 'react-native';
 
 const MainMenu = ({navigation}) => {
   return (
-    <SafeAreaView style={styles.LandingPage}>
+    <SafeAreaView style={styles.mainMenu}>
       <TouchableOpacity
-        style={[styles.landingPageOption, styles.makeAccount]}
+        style={[styles.mainMenuOption, styles.makeAccount]}
         onPress={() => {
           navigation.navigate('SignUp');
         }}>
-        <Text style={styles.landingPageText}>Make An Account</Text>
+        <Text style={styles.mainMenuText}>Start a New Game</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={[styles.landingPageOption, styles.login]}
+        style={[styles.mainMenuOption, styles.login]}
         onPress={() => {
           navigation.navigate('Login');
         }}>
-        <Text style={styles.landingPageText}>Login</Text>
+        <Text style={styles.mainMenuText}>Continue Game</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={[styles.landingPageOption, styles.activeGame]}
+        style={[styles.mainMenuOption, styles.activeGame]}
         onPress={() => {
           navigation.navigate('ActiveGame');
         }}>
-        <Text style={styles.landingPageText}>Proceed Without An Account</Text>
+        <Text style={styles.mainMenuText}>Proceed Without An Account</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.mainMenuOption, styles.activeGame]}
+        onPress={() => {
+          navigation.navigate('LandingPage');
+        }}>
+        <Text style={styles.mainMenuText}> Home </Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  LandingPage: {
+  mainMenu: {
     flex: 1,
     justifyContent: 'space-evenly',
     alignItems: 'center',
   },
-  landingPageOption: {
+  mainMenuOption: {
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 10,
@@ -46,7 +53,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 15,
   },
-  landingPageText: {
+  mainMenuText: {
     fontSize: 18,
     fontWeight: 'bold',
   },

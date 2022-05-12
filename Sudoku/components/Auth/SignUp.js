@@ -95,6 +95,7 @@ class SignUp extends React.Component {
             errors: errorsDupe,
           });
         }
+        throw new Error(err.response.data);
       })
       .then(response => {
         this.props.navigation.navigate('Login');

@@ -29,7 +29,6 @@ class Login extends React.Component {
     this.setState({[field]: event.nativeEvent.text});
   }
   submitLogin() {
-    console.log(`username: ${this.state.username} password: ${this.state.password}`)
     let errorsDupe = this.state.errors;
     let isValid = true;
     Object.keys(this.prefixes).forEach(field => {
@@ -57,7 +56,7 @@ class Login extends React.Component {
       params: {username: this.state.username, password: this.state.password},
     })
     .then(() => {
-      console.log('Got back from looking for account');
+      this.props.navigation.navigate('MainMenuLandingPage');
     })
     .catch(err => {
       if (err.response.data === 'Username not found') {
@@ -104,10 +103,10 @@ class Login extends React.Component {
         <Text style={styles.title}>Login</Text>
       </TouchableOpacity>
       <TouchableOpacity
-          style={styles.button}
-          onPress={() => this.props.navigation.navigate('LandingPage')}>
-          <Text style={styles.title}> Home </Text>
-        </TouchableOpacity>
+        style={styles.button}
+        onPress={() => this.props.navigation.navigate('LandingPage')}>
+        <Text style={styles.title}> Home </Text>
+      </TouchableOpacity>
       </View>
     );
   }

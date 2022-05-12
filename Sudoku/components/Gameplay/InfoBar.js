@@ -1,7 +1,9 @@
 import React from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 const InfoBar = props => {
+  const navigation = useNavigation();
   return (
     <View style={styles.infoBar}>
       <View style={styles.infoBarChild}>
@@ -10,6 +12,13 @@ const InfoBar = props => {
       <View style={styles.infoBarChild}>
         <Text style={styles.childText}>Current Game Time: {props.time}</Text>
       </View>
+      <TouchableOpacity
+        style={[styles.infoBarChild]}
+        onPress={() => {
+          navigation.navigate('LandingPage');
+        }}>
+        <Text style={styles.mainMenuText}> Home </Text>
+      </TouchableOpacity>
     </View>
   );
 };

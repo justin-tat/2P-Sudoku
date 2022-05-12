@@ -49,7 +49,7 @@ const App: () => Node = () => {
             options={{headerShown: false}}
           />
           <Stack.Screen
-            name="MainMenu"
+            name="MainMenuLandingPage"
             component={MainMenuLandingPage}
             options={{headerShown: false}}
           />
