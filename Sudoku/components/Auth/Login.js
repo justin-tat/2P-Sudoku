@@ -55,8 +55,9 @@ class Login extends React.Component {
     axios.get('http://localhost:3000/' + 'users/getAccount', {
       params: {username: this.state.username, password: this.state.password},
     })
-    .then(() => {
-      this.props.navigation.navigate('MainMenuLandingPage');
+    .then((info) => {
+      console.log(info.data);
+      this.props.navigation.navigate('MainMenuLandingPage', info.data);
     })
     .catch(err => {
       if (err.response.data === 'Username not found') {

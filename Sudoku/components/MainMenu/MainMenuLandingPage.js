@@ -5,13 +5,15 @@ import MainMenu from './MainMenu.js';
 
 const Stack = createNativeStackNavigator();
 
-const MainMenuLandingPage = () => {
+const MainMenuLandingPage = ({route, navigation}) => {
+  //console.log("Inside mainMenuLandingPage: " + JSON.stringify(route.params));
   return (
     <Stack.Navigator initalRouteName="MainMenu">
       <Stack.Screen
         name="MainMenu"
         component={MainMenu}
         options={{headerShown: false}}
+        initialParams={route.params}
       />
       {/* <Stack.Screen
           name="newGame"

@@ -2,7 +2,10 @@ import React from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {StyleSheet, TouchableOpacity, Text} from 'react-native';
 
-const MainMenu = ({navigation}) => {
+const MainMenu = ({route, navigation}) => {
+  //Userinfo passed in as route.params
+  console.log('Inside mainMenu: ' + JSON.stringify(route.params));
+  const userInfo = route.params;
   return (
     <SafeAreaView style={styles.mainMenu}>
       <TouchableOpacity
