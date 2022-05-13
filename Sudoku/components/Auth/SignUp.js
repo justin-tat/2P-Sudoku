@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import {OutlinedTextField} from 'rn-material-ui-textfield';
 import axios from 'axios';
+import {myURL} from '@env';
 
 class SignUp extends React.Component {
   constructor(props) {
@@ -66,14 +67,11 @@ class SignUp extends React.Component {
       return;
     }
     axios
-      .get('http://localhost:3000/users/verifyAccount', {
+      .get(myURL + 'users/verifyAccount', {
         params: {username: this.state.newUsername, email: this.state.newEmail},
       })
       .then(() => {
-        return axios.post(
-          'http://localhost:3000/' + 'users/makeAccount',
-          null,
-          {
+        return axios.post(myURL + 'users/makeAccount', null, {
             params: {
               username: this.state.newUsername,
               email: this.state.newEmail,

@@ -3,6 +3,7 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity, View, Text, Dimensions, Alert} from 'react-native';
 import { OutlinedTextField } from 'rn-material-ui-textfield';
 import axios from 'axios';
+import {myURL} from '@env';
 
 // const window = Dimensions.get("window");
 // const screen = Dimensions.get("screen");
@@ -52,7 +53,7 @@ class Login extends React.Component {
     if (!isValid) {
       return;
     }
-    axios.get('http://localhost:3000/' + 'users/getAccount', {
+    axios.get(myURL + 'users/getAccount', {
       params: {username: this.state.username, password: this.state.password},
     })
     .then((info) => {

@@ -1,30 +1,31 @@
 import React from 'react';
-import {generateUniqueBoard} from '../globals.js';
 import Board from './Grid/Board.js';
 import Options from './Options.js';
 import InfoBar from './InfoBar.js';
 import {StyleSheet, Text} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import axios from 'axios';
+import io from "socket.io-client";
+import {myIP} from '@env';
 
 class ActiveGame extends React.Component {
   constructor(props) {
     super(props);
-    let holes = 25;
-    const board = generateUniqueBoard(holes);
     this.state = {
       rating: 1000,
-      currentBoard: board[1],
-      solutionBoard: board[2],
+      currentBoard: [],
+      solutionBoard: [],
       selectedTile: [],
       selectedOption: 0,
       numMistakes: 0,
-      tilesLeft: holes, //Same number as generate Unique Board
+      tilesLeft: 0,
       time: 0,
       timerID: 0,
     };
     this.selectTile = this.selectTile.bind(this);
     this.selectOption = this.selectOption.bind(this);
+    this.userInfo = props.route.params;
+    console.log('From ActiveGame: ', props.route.params);
   }
   componentDidMount() {
     const timerID = setInterval(() => {
@@ -34,9 +35,16 @@ class ActiveGame extends React.Component {
     this.setState({
       timerID: timerID,
     });
-    axios.get('http://localhost:3000').then(res => {
-      console.log(res.data);
-    });
+    if (this.userInfo.board_id === "0") {
+      const socket = io(myIP);
+
+      axios.post(myIP + '/games/findGame', null, {
+        params: {
+          playerId: this.userInfo.id,
+          
+        },
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -94,12 +102,12 @@ class ActiveGame extends React.Component {
           numMistakes={this.state.numMistakes}
           time={this.state.time + this.state.numMistakes * 10}
         />
-        <Board
+        {/* <Board
           board={this.state.currentBoard}
           selectTile={this.selectTile}
           selectedTile={this.state.selectedTile}
         />
-        <Options selectOption={this.selectOption} />
+        <Options selectOption={this.selectOption} /> */}
       </SafeAreaView>
     );
   }
