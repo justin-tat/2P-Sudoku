@@ -2,32 +2,42 @@ import React from 'react';
 import Board from './Grid/Board.js';
 import Options from './Options.js';
 import InfoBar from './InfoBar.js';
-import {StyleSheet, Text} from 'react-native';
+import GameLoadingScreen from './GameLoadingScreen.js';
+import {StyleSheet, Text, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import axios from 'axios';
 import io from "socket.io-client";
-import {myIP} from '@env';
+import {myIP, myURL} from '@env';
+import {generateUniqueBoard} from '../globals.js';
 
 class ActiveGame extends React.Component {
   constructor(props) {
     super(props);
+    let holes = 0;
+    const board = generateUniqueBoard(holes);
     this.state = {
       rating: 1000,
-      currentBoard: [],
-      solutionBoard: [],
+      //currentBoard: [],
+      //solutionBoard: [],
+      currentBoard: board[1],
+      solutionBoard: board[2],
       selectedTile: [],
       selectedOption: 0,
       numMistakes: 0,
-      tilesLeft: 0,
+      //tilesLeft: 0,
+      tilesLeft: holes,
       time: 0,
       timerID: 0,
+      loadingScreen: false,
     };
     this.selectTile = this.selectTile.bind(this);
     this.selectOption = this.selectOption.bind(this);
     this.userInfo = props.route.params;
-    console.log('From ActiveGame: ', props.route.params);
+    this.socket = io(myURL);
   }
   componentDidMount() {
+    console.log('UserInfo from activeGame: ', this.userInfo);
+    //this.socket = io(myURL)
     const timerID = setInterval(() => {
       let currTime = this.state.time + 1;
       this.setState({time: currTime});
@@ -36,19 +46,33 @@ class ActiveGame extends React.Component {
       timerID: timerID,
     });
     if (this.userInfo.board_id === "0") {
-      const socket = io(myIP);
-
-      axios.post(myIP + '/games/findGame', null, {
-        params: {
-          playerId: this.userInfo.id,
-          
-        },
+      //this.socket = io(myIP).emit("Find Game", {difficulty: });
+      //this.socket = io(myIP + "/");
+      this.socket.emit("findGame", this.userInfo);
+      this.socket.on('waitingForOpponent', () => {
+        this.setState({loadingScreen: true});
       });
+      this.socket.on('opponentFound', () => {
+        this.setState({loadingScreen: false});
+      })
+      // this.socket.on('Potential Game', userInfo => {
+      //   console.log("userInfo: ", userInfo);
+      // });
+
+
+      // axios.post(myIP + '/games/findGame', null, {
+      //   params: {
+      //     playerId: this.userInfo.id,
+          
+      //   },
+      // });
     }
   }
 
   componentWillUnmount() {
     clearInterval(this.state.timerID);
+    this.socket.emit('end');
+    this.socket.close();
   }
 
   isCorrect() {
@@ -97,17 +121,24 @@ class ActiveGame extends React.Component {
   render() {
     return (
       <SafeAreaView style={styles.gameScreen}>
-        <InfoBar
-          rating={this.state.rating}
-          numMistakes={this.state.numMistakes}
-          time={this.state.time + this.state.numMistakes * 10}
-        />
-        {/* <Board
-          board={this.state.currentBoard}
-          selectTile={this.selectTile}
-          selectedTile={this.state.selectedTile}
-        />
-        <Options selectOption={this.selectOption} /> */}
+        {this.state.loadingScreen && 
+          <View style={styles.activeGame}>
+            <InfoBar
+            rating={this.state.rating}
+            numMistakes={this.state.numMistakes}
+            time={this.state.time + this.state.numMistakes * 10}
+            />
+            <Board
+              board={this.state.currentBoard}
+              selectTile={this.selectTile}
+              selectedTile={this.state.selectedTile}
+            />
+            <Options selectOption={this.selectOption} />
+          </View>
+        }
+        {this.state.loadingScreen && 
+          <GameLoadingScreen/>
+        }
       </SafeAreaView>
     );
   }
@@ -117,6 +148,9 @@ const styles = StyleSheet.create({
   gameScreen: {
     flex: 1,
     justifyContent: 'space-evenly',
+  },
+  activeGame: {
+    flex: 1,
   },
 });
 
