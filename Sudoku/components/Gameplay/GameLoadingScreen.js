@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import { Alert, Modal, StyleSheet, Text, Pressable, View } from "react-native";
 
 class GameLoadingScreen extends Component {
+  constructor(props) {
+    super(props);
+  }
   state = {
     modalVisible: false
   };
@@ -22,13 +25,7 @@ class GameLoadingScreen extends Component {
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
-              <Text style={styles.modalText}>No Opponents Found! Waiting for Opponent to join the Lobby</Text>
-              <Pressable
-                style={[styles.button, styles.buttonClose]}
-                onPress={() => this.setModalVisible(!modalVisible)}
-              >
-                <Text style={styles.textStyle}>Hide Modal</Text>
-              </Pressable>
+              <Text style={styles.modalText}>No Opponents Found! Waiting for an Opponent to join the Lobby</Text>
             </View>
           </View>
         </Modal>

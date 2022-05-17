@@ -57,7 +57,6 @@ class Login extends React.Component {
       params: {username: this.state.username, password: this.state.password},
     })
     .then((info) => {
-      console.log(info.data);
       this.props.navigation.navigate('MainMenuLandingPage', info.data);
     })
     .catch(err => {

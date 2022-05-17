@@ -38,34 +38,49 @@ class ActiveGame extends React.Component {
   componentDidMount() {
     console.log('UserInfo from activeGame: ', this.userInfo);
     //this.socket = io(myURL)
-    const timerID = setInterval(() => {
-      let currTime = this.state.time + 1;
-      this.setState({time: currTime});
-    }, 1000);
-    this.setState({
-      timerID: timerID,
-    });
     if (this.userInfo.board_id === "0") {
       //this.socket = io(myIP).emit("Find Game", {difficulty: });
       //this.socket = io(myIP + "/");
       this.socket.emit("findGame", this.userInfo);
+
       this.socket.on('waitingForOpponent', () => {
         this.setState({loadingScreen: true});
       });
-      this.socket.on('opponentFound', () => {
+
+      this.socket.on('startGame', () => {
         this.setState({loadingScreen: false});
-      })
-      // this.socket.on('Potential Game', userInfo => {
-      //   console.log("userInfo: ", userInfo);
-      // });
-
-
-      // axios.post(myIP + '/games/findGame', null, {
-      //   params: {
-      //     playerId: this.userInfo.id,
-          
-      //   },
-      // });
+        //Start timer
+        const timerID = setInterval(() => {
+          let currTime = this.state.time + 1;
+          this.setState({time: currTime});
+        }, 1000);
+        this.setState({
+          timerID: timerID,
+        });
+      });
+      
+      this.socket.on('makeRecord', opponent => {
+        let parsedOpponent = opponent.split(' ');
+        let opponentParam = {
+          rating: parseInt(parsedOpponent[0], 10),
+          id: parseInt(parsedOpponent[1]),
+          name: parsedOpponent[2]
+        };
+        let playerOneParam = {
+          rating: this.userInfo.rating,
+          id: this.userInfo.id,
+          name: this.userInfo.name,
+        }
+        axios.post(myURL + 'games/makeGame', null, {
+          params: {
+            playerOne: playerOneParam,
+            playerTwo: opponentParam
+          }
+        })
+        .then(() => {
+          this.socket.emit('gameRecordCreated', );
+        })
+      });
     }
   }
 
