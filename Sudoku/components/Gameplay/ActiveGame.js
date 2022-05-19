@@ -33,7 +33,8 @@ class ActiveGame extends React.Component {
     this.selectTile = this.selectTile.bind(this);
     this.selectOption = this.selectOption.bind(this);
     this.userInfo = props.route.params;
-    this.socket = io(myURL);
+    this.socket = io(myIP);
+    //this.socket = io(myURL);
   }
   componentDidMount() {
     console.log('UserInfo from activeGame: ', this.userInfo);
