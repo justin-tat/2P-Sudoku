@@ -37,7 +37,6 @@ class ActiveGame extends React.Component {
     //this.socket = io(myURL);
   }
   componentDidMount() {
-    console.log('UserInfo from activeGame: ', this.userInfo);
     //this.socket = io(myURL)
     if (this.userInfo.board_id === "0") {
       //this.socket = io(myIP).emit("Find Game", {difficulty: });
@@ -46,6 +45,31 @@ class ActiveGame extends React.Component {
 
       this.socket.on('waitingForOpponent', () => {
         this.setState({loadingScreen: true});
+      });
+
+      this.socket.on('makeRecord', opponent => {
+        let parsedOpponent = opponent.split(' ');
+        let opponentParam = {
+          rating: parseInt(parsedOpponent[0], 10),
+          id: parseInt(parsedOpponent[1]),
+          name: parsedOpponent[2]
+        };
+        console.log("opponentParam", opponentParam )
+        let playerOneParam = {
+          rating: this.userInfo.rating,
+          id: this.userInfo.id,
+          name: this.userInfo.name,
+        }
+        console.log("playerOneParam", playerOneParam );
+        axios.post(myURL + 'games/makeGame', null, {
+          params: {
+            playerOne: playerOneParam,
+            playerTwo: opponentParam
+          }
+        })
+        .then(() => {
+          this.socket.emit('gameRecordCreated', );
+        })
       });
 
       this.socket.on('startGame', () => {
@@ -58,29 +82,6 @@ class ActiveGame extends React.Component {
         this.setState({
           timerID: timerID,
         });
-      });
-      
-      this.socket.on('makeRecord', opponent => {
-        let parsedOpponent = opponent.split(' ');
-        let opponentParam = {
-          rating: parseInt(parsedOpponent[0], 10),
-          id: parseInt(parsedOpponent[1]),
-          name: parsedOpponent[2]
-        };
-        let playerOneParam = {
-          rating: this.userInfo.rating,
-          id: this.userInfo.id,
-          name: this.userInfo.name,
-        }
-        axios.post(myURL + 'games/makeGame', null, {
-          params: {
-            playerOne: playerOneParam,
-            playerTwo: opponentParam
-          }
-        })
-        .then(() => {
-          this.socket.emit('gameRecordCreated', );
-        })
       });
     }
   }
@@ -137,24 +138,26 @@ class ActiveGame extends React.Component {
   render() {
     return (
       <SafeAreaView style={styles.gameScreen}>
-        {this.state.loadingScreen && 
-          <View style={styles.activeGame}>
-            <InfoBar
-            rating={this.state.rating}
-            numMistakes={this.state.numMistakes}
-            time={this.state.time + this.state.numMistakes * 10}
-            />
-            <Board
-              board={this.state.currentBoard}
-              selectTile={this.selectTile}
-              selectedTile={this.state.selectedTile}
-            />
-            <Options selectOption={this.selectOption} />
-          </View>
-        }
-        {this.state.loadingScreen && 
-          <GameLoadingScreen/>
-        }
+        <View style={styles.container}>
+          {!this.state.loadingScreen && 
+            <View style={styles.activeGame}>
+              <InfoBar
+              rating={this.state.rating}
+              numMistakes={this.state.numMistakes}
+              time={this.state.time + this.state.numMistakes * 10}
+              />
+              <Board
+                board={this.state.currentBoard}
+                selectTile={this.selectTile}
+                selectedTile={this.state.selectedTile}
+              />
+              <Options selectOption={this.selectOption} />
+            </View>
+          }
+          {this.state.loadingScreen && 
+            <GameLoadingScreen/>
+          }
+        </View>
       </SafeAreaView>
     );
   }
@@ -168,6 +171,9 @@ const styles = StyleSheet.create({
   activeGame: {
     flex: 1,
   },
+  container: {
+    flexGrow: 1,
+  }
 });
 
 export default ActiveGame;

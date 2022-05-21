@@ -1,15 +1,15 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import { StyleSheet, TouchableOpacity, View, Text, Dimensions, Alert} from 'react-native';
+import { StyleSheet, TouchableOpacity, View, Text, Dimensions, Alert, ScrollView} from 'react-native';
 import { OutlinedTextField } from 'rn-material-ui-textfield';
 import axios from 'axios';
-import {myURL} from '@env';
+import {myURL, myIP} from '@env';
 
 // const window = Dimensions.get("window");
 // const screen = Dimensions.get("screen");
 
 class Login extends React.Component {
-  constructor(props) {
+  constructor(props) { 
     super(props);
     this.state = {
       username: '',
@@ -25,6 +25,7 @@ class Login extends React.Component {
       username: 'Username',
       password: 'Password',
     };
+    console.log('My Address: ', myIP);
   }
   onChangeText(event, field) {
     this.setState({[field]: event.nativeEvent.text});
@@ -53,7 +54,9 @@ class Login extends React.Component {
     if (!isValid) {
       return;
     }
-    axios.get(myURL + 'users/getAccount', {
+    console.log('Firing axios call');
+    console.log(myIP + '/users/getAccount');
+    axios.get(myIP + '/users/getAccount', {
       params: {username: this.state.username, password: this.state.password},
     })
     .then((info) => {
@@ -73,7 +76,7 @@ class Login extends React.Component {
   }
   render() {
     return (
-      <View style={styles.login}>
+      <ScrollView contentContainerStyle={styles.login} keyboardShouldPersistTaps='handled'>
         <Text style={styles.title}>
           Username
         </Text>
@@ -102,13 +105,13 @@ class Login extends React.Component {
         style={styles.button}
         onPress={this.submitLogin}>
         <Text style={styles.title}>Login</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => this.props.navigation.navigate('LandingPage')}>
-        <Text style={styles.title}> Home </Text>
-      </TouchableOpacity>
-      </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => this.props.navigation.navigate('LandingPage')}>
+          <Text style={styles.title}> Home </Text>
+        </TouchableOpacity>
+      </ScrollView>
     );
   }
 }

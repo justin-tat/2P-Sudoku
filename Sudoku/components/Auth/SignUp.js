@@ -1,8 +1,8 @@
 import React from 'react';
-import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, ScrollView} from 'react-native';
 import {OutlinedTextField} from 'rn-material-ui-textfield';
 import axios from 'axios';
-import {myURL} from '@env';
+import {myURL, myIP} from '@env';
 
 class SignUp extends React.Component {
   constructor(props) {
@@ -67,11 +67,11 @@ class SignUp extends React.Component {
       return;
     }
     axios
-      .get(myURL + 'users/verifyAccount', {
+      .get(myIP + '/users/verifyAccount', {
         params: {username: this.state.newUsername, email: this.state.newEmail},
       })
       .then(() => {
-        return axios.post(myURL + 'users/makeAccount', null, {
+        return axios.post(myIP + '/users/makeAccount', null, {
             params: {
               username: this.state.newUsername,
               email: this.state.newEmail,
@@ -107,7 +107,7 @@ class SignUp extends React.Component {
   }
   render() {
     return (
-      <View style={styles.center}>
+      <ScrollView contentContainerStyle={styles.center} keyboardShouldPersistTaps='handled'>
         <Text style={styles.title}>Username</Text>
         <OutlinedTextField
           label="Username"
@@ -161,7 +161,7 @@ class SignUp extends React.Component {
           onPress={() => this.props.navigation.navigate('LandingPage')}>
           <Text style={styles.title}> Home </Text>
         </TouchableOpacity>
-      </View>
+      </ScrollView>
     );
   }
 }

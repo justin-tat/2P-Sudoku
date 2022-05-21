@@ -16,10 +16,12 @@ import LandingPage from './components/Auth/LandingPage.js';
 import SignUp from './components/Auth/SignUp.js';
 import ActiveGame from './components/Gameplay/ActiveGame.js';
 import MainMenuLandingPage from './components/MainMenu/MainMenuLandingPage.js';
+import {LogBox} from 'react-native';
 
-console.ignoredYellowBox = [
-  'Warning: ViewPropTypes will be removed from React Native',
-];
+LogBox.ignoreLogs([
+  'ViewPropTypes will be removed from React Native',
+]);
+//console.disableYellowBox = true;
 
 const Stack = createNativeStackNavigator();
 
