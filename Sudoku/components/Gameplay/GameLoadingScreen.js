@@ -6,7 +6,7 @@ class GameLoadingScreen extends Component {
     super(props);
   }
   state = {
-    modalVisible: false
+    modalVisible: true
   };
 
   setModalVisible = (visible) => {
@@ -18,14 +18,21 @@ class GameLoadingScreen extends Component {
         <Modal
           animationType="slide"
           transparent={true}
-          visible={true}
+          visible={this.state.modalVisible}
           onRequestClose={() => {
             Alert.alert("Modal has been closed.");
+            
           }}
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={styles.modalText}>No Opponents Found! Waiting for an Opponent to join the Lobby</Text>
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => this.setModalVisible(!modalVisible)}
+              >
+                <Text style={styles.textStyle}>Hide Modal</Text>
+              </Pressable>
             </View>
           </View>
         </Modal>

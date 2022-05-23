@@ -33,14 +33,12 @@ class ActiveGame extends React.Component {
     this.selectTile = this.selectTile.bind(this);
     this.selectOption = this.selectOption.bind(this);
     this.userInfo = props.route.params;
-    this.socket = io(myIP);
+    
     //this.socket = io(myURL);
   }
   componentDidMount() {
-    //this.socket = io(myURL)
+    this.socket = io(myIP);
     if (this.userInfo.board_id === "0") {
-      //this.socket = io(myIP).emit("Find Game", {difficulty: });
-      //this.socket = io(myIP + "/");
       this.socket.emit("findGame", this.userInfo);
 
       this.socket.on('waitingForOpponent', () => {
@@ -48,39 +46,57 @@ class ActiveGame extends React.Component {
       });
 
       this.socket.on('makeRecord', opponent => {
+        this.opponent = opponent
         let parsedOpponent = opponent.split(' ');
         let opponentParam = {
           rating: parseInt(parsedOpponent[0], 10),
           id: parseInt(parsedOpponent[1]),
           name: parsedOpponent[2]
         };
-        console.log("opponentParam", opponentParam )
         let playerOneParam = {
           rating: this.userInfo.rating,
           id: this.userInfo.id,
           name: this.userInfo.name,
         }
-        console.log("playerOneParam", playerOneParam );
-        axios.post(myURL + 'games/makeGame', null, {
+        axios.post(myIP + '/games/makeGame', {
           params: {
             playerOne: playerOneParam,
             playerTwo: opponentParam
           }
         })
-        .then(() => {
-          this.socket.emit('gameRecordCreated', );
+        .then(board => {
+          let response = JSON.parse(JSON.stringify(board.data));
+          let solution = JSON.parse(response.boardSolution);
+          let currentState = JSON.parse(response.boardState);
+          let numHoles = parseInt(response.holes);
+          this.setState({
+            currentBoard: currentState,
+            solution: solution,
+            tilesLeft: numHoles
+          });
+          let info = {
+            opponent: this.opponent,
+            currentBoard: currentState,
+            solution: solution,
+            tilesLeft: numHoles
+          }
+          this.socket.emit('gameRecordCreated', info);
         })
       });
 
-      this.socket.on('startGame', () => {
+      this.socket.on('startGame', (info) => {
         this.setState({loadingScreen: false});
         //Start timer
         const timerID = setInterval(() => {
           let currTime = this.state.time + 1;
           this.setState({time: currTime});
         }, 1000);
+        console.log(info);
         this.setState({
-          timerID: timerID,
+          currentBoard: info.currentBoard,
+          solution: info.solution,
+          tilesLeft: info.tilesLeft,
+          timerID: timerID
         });
       });
     }
@@ -88,6 +104,9 @@ class ActiveGame extends React.Component {
 
   componentWillUnmount() {
     clearInterval(this.state.timerID);
+    this.setState({
+      loadingScreen: false,
+    });
     this.socket.emit('end');
     this.socket.close();
   }

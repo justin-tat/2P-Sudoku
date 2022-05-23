@@ -71,7 +71,7 @@ class SignUp extends React.Component {
         params: {username: this.state.newUsername, email: this.state.newEmail},
       })
       .then(() => {
-        return axios.post(myIP + '/users/makeAccount', null, {
+        return axios.post(myIP + '/users/makeAccount', {
             params: {
               username: this.state.newUsername,
               email: this.state.newEmail,

@@ -9,7 +9,7 @@ import {myURL, myIP} from '@env';
 // const screen = Dimensions.get("screen");
 
 class Login extends React.Component {
-  constructor(props) { 
+  constructor(props) {
     super(props);
     this.state = {
       username: '',
@@ -77,7 +77,7 @@ class Login extends React.Component {
   render() {
     return (
       <ScrollView contentContainerStyle={styles.login} keyboardShouldPersistTaps='handled'>
-        <Text style={styles.title}>
+        <Text style={styles.title}> 
           Username
         </Text>
         <OutlinedTextField
