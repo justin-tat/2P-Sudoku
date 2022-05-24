@@ -20,7 +20,7 @@ const MainMenu = ({route, navigation}) => {
         <TouchableOpacity
           style={[styles.mainMenuOption, styles.login]}
           onPress={() => {
-            navigation.navigate('Login');
+            navigation.navigate('ActiveGame', userInfo);
           }}>
           <Text style={styles.mainMenuText}>Continue Game</Text>
         </TouchableOpacity>

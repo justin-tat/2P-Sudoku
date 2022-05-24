@@ -17,14 +17,11 @@ class ActiveGame extends React.Component {
     const board = generateUniqueBoard(holes);
     this.state = {
       rating: 1000,
-      //currentBoard: [],
-      //solutionBoard: [],
       currentBoard: board[1],
       solutionBoard: board[2],
       selectedTile: [],
       selectedOption: 0,
       numMistakes: 0,
-      //tilesLeft: 0,
       tilesLeft: holes,
       time: 0,
       timerID: 0,
@@ -33,8 +30,7 @@ class ActiveGame extends React.Component {
     this.selectTile = this.selectTile.bind(this);
     this.selectOption = this.selectOption.bind(this);
     this.userInfo = props.route.params;
-    
-    //this.socket = io(myURL);
+    console.log('this.userInfo: ', this.userInfo);
   }
   componentDidMount() {
     this.socket = io(myIP);
@@ -91,7 +87,6 @@ class ActiveGame extends React.Component {
           let currTime = this.state.time + 1;
           this.setState({time: currTime});
         }, 1000);
-        console.log(info);
         this.setState({
           currentBoard: info.currentBoard,
           solution: info.solution,
@@ -99,6 +94,29 @@ class ActiveGame extends React.Component {
           timerID: timerID
         });
       });
+    } else {
+      axios.get(myIP + '/games/getGame', {
+        params: {boardId: this.userInfo.board_id}
+      })
+      .then(board => {
+        let temp = JSON.parse(JSON.stringify(board.data));
+        let solution = JSON.parse(temp.board_solution);
+        let boardState = JSON.parse(temp.board_state);
+        let numHoles = parseInt(temp.holes);
+        const timerID = setInterval(() => {
+          let currTime = this.state.time + 1;
+          this.setState({time: currTime});
+        }, 1000);
+        this.setState({
+          currentBoard: boardState,
+          solution: solution,
+          tilesLeft: numHoles,
+          timerID: timerID
+        });
+      })
+      .catch(err => {
+        console.log('Errored in client side getGame get request', err);
+      })
     }
   }
 
