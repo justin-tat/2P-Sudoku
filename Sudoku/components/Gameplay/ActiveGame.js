@@ -19,6 +19,7 @@ class ActiveGame extends React.Component {
       rating: 1000,
       currentBoard: board[1],
       solutionBoard: board[2],
+      answerableCells: board[1],
       selectedTile: [],
       selectedOption: 0,
       numMistakes: 0,
@@ -64,17 +65,20 @@ class ActiveGame extends React.Component {
           let response = JSON.parse(JSON.stringify(board.data));
           let solution = JSON.parse(response.boardSolution);
           let currentState = JSON.parse(response.boardState);
+          let answerableCells = JSON.parse(response.answerable_cells);
           let numHoles = parseInt(response.holes);
           this.setState({
             currentBoard: currentState,
             solution: solution,
-            tilesLeft: numHoles
+            answerableCells: answerableCells,
+            tilesLeft: numHoles,
           });
           let info = {
             opponent: this.opponent,
             currentBoard: currentState,
             solution: solution,
-            tilesLeft: numHoles
+            tilesLeft: numHoles,
+            answerableCells: answerableCells,
           }
           this.socket.emit('gameRecordCreated', info);
         })
@@ -90,6 +94,7 @@ class ActiveGame extends React.Component {
         this.setState({
           currentBoard: info.currentBoard,
           solution: info.solution,
+          answerableCells: info.answerableCells,
           tilesLeft: info.tilesLeft,
           timerID: timerID
         });
@@ -102,7 +107,9 @@ class ActiveGame extends React.Component {
         let temp = JSON.parse(JSON.stringify(board.data));
         let solution = JSON.parse(temp.board_solution);
         let boardState = JSON.parse(temp.board_state);
+        let answerableCells = JSON.parse(temp.answerable_cells);
         let numHoles = parseInt(temp.holes);
+
         const timerID = setInterval(() => {
           let currTime = this.state.time + 1;
           this.setState({time: currTime});
@@ -111,7 +118,8 @@ class ActiveGame extends React.Component {
           currentBoard: boardState,
           solution: solution,
           tilesLeft: numHoles,
-          timerID: timerID
+          timerID: timerID,
+          answerableCells: answerableCells
         });
       })
       .catch(err => {
@@ -127,6 +135,12 @@ class ActiveGame extends React.Component {
     });
     this.socket.emit('end');
     this.socket.close();
+    // axios.put(myIP + '/games/updateGame', {
+    //   params: {
+    //     boardState: this.state.currentBoard,
+
+    //   }
+    // })
   }
 
   isCorrect() {
@@ -146,30 +160,39 @@ class ActiveGame extends React.Component {
   }
 
   selectTile(xcor, ycor) {
+    console.log('selected Tile: ', xcor + " " + ycor);
     this.setState({
       selectedTile: [xcor, ycor],
     });
   }
-  selectOption(num) {
-    // eslint-disable-next-line prettier/prettier
-    if (+num === this.state.solutionBoard[this.state.selectedTile[1]][this.state.selectedTile[0]]) {
-      let updatedBoard = this.state.currentBoard;
-      // eslint-disable-next-line prettier/prettier
-      updatedBoard[this.state.selectedTile[1]][this.state.selectedTile[0]] = +num;
 
-      this.setState({
-        currentBoard: updatedBoard,
-        selectedTile: [],
-      });
-    } else {
-      let updatedMistakes = this.state.numMistakes;
-      updatedMistakes++;
-      this.setState({
-        numMistakes: updatedMistakes,
-        selectedTile: [],
-      });
-    }
+  // Always update cell with the entered number
+  // On submittal, iterate through the currentState of the board, adding all incorrect tiles to correctness object. If there is any incorrect, pass this down to cell and display the incorrect ones. 
+  selectOption(num) {
+    // if (+num === this.state.solutionBoard[this.state.selectedTile[1]][this.state.selectedTile[0]]) {
+    //   let updatedBoard = this.state.currentBoard;
+    //   updatedBoard[this.state.selectedTile[1]][this.state.selectedTile[0]] = +num;
+
+    //   this.setState({
+    //     currentBoard: updatedBoard,
+    //     selectedTile: [],
+    //   });
+    // } else {
+    //   let updatedMistakes = this.state.numMistakes;
+    //   updatedMistakes++;
+    //   this.setState({
+    //     numMistakes: updatedMistakes,
+    //     selectedTile: [],
+    //   });
+    // }
     //Put in what happens if you're wrong here
+    let updatedBoard = this.state.currentBoard;
+    updatedBoard[this.state.selectedTile[1]][this.state.selectedTile[0]] = +num;
+
+    this.setState({
+      currentBoard: updatedBoard,
+      selectedTile: [],
+    });
   }
 
   render() {
@@ -187,6 +210,7 @@ class ActiveGame extends React.Component {
                 board={this.state.currentBoard}
                 selectTile={this.selectTile}
                 selectedTile={this.state.selectedTile}
+                answerableCells = {this.state.answerableCells}
               />
               <Options selectOption={this.selectOption} />
             </View>

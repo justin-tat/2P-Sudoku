@@ -14,7 +14,7 @@ const Cell = props => {
     <TouchableOpacity
       style={[styles.button, styles[isSelected]]}
       onPress={() => {
-        if (title === '_') {
+        if (props.isAnswerable) {
           props.selectTile(props.xcor, props.ycor);
         }
       }}>

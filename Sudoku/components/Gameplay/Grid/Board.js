@@ -13,6 +13,7 @@ const Board = props => {
         key={'RowSet 1'}
         selectTile={props.selectTile}
         selectedTile={props.selectedTile}
+        answerableCells = {props.answerableCells}
       />
       <RowSet
         board={board}
@@ -20,6 +21,7 @@ const Board = props => {
         key={'RowSet 2'}
         selectTile={props.selectTile}
         selectedTile={props.selectedTile}
+        answerableCells = {props.answerableCells}
       />
       <RowSet
         board={board}
@@ -27,6 +29,7 @@ const Board = props => {
         key={'RowSet 3'}
         selectTile={props.selectTile}
         selectedTile={props.selectedTile}
+        answerableCells = {props.answerableCells}
       />
     </View>
   );
