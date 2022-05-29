@@ -4,12 +4,11 @@ import {Text, StyleSheet, TouchableOpacity} from 'react-native';
 const Cell = props => {
   const {onPress, title = props.title} = props;
   let isSelected;
-  if (
-    props.xcor === props.selectedTile[0] &&
-    props.ycor === props.selectedTile[1]
-  ) {
+  let player = props.isAnswerable ? 'player' : '';
+  if (props.xcor === props.selectedTile[0] && props.ycor === props.selectedTile[1]) {
     isSelected = 'isSelected';
   }
+
   return (
     <TouchableOpacity
       style={[styles.button, styles[isSelected]]}
