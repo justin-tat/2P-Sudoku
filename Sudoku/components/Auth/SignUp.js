@@ -6,6 +6,7 @@ import {myURL, myIP} from '@env';
 
 class SignUp extends React.Component {
   constructor(props) {
+    
     super(props);
     this.state = {
       newUsername: '',

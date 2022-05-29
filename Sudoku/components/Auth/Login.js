@@ -54,11 +54,11 @@ class Login extends React.Component {
     if (!isValid) {
       return;
     }
-    console.log('Firing axios call');
-    console.log(myIP + '/users/getAccount');
+    //console.log('Firing axios call');
     axios.get(myIP + '/users/getAccount', {
       params: {username: this.state.username, password: this.state.password},
     })
+    
     .then((info) => {
       this.props.navigation.navigate('MainMenuLandingPage', info.data);
     })
