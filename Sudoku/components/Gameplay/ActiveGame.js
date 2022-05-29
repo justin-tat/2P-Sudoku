@@ -64,21 +64,20 @@ class ActiveGame extends React.Component {
           }
         })
         .then(board => {
-          console.log('board after makeGame: ', board.data);
           let response = JSON.parse(JSON.stringify(board.data));
           let solution = JSON.parse(response.boardSolution);
           let currentState = JSON.parse(response.boardState);
           let numHoles = parseInt(response.holes);
           this.setState({
             currentBoard: currentState,
-            solution: solution,
+            solutionBoard: solution,
             answerableCells: currentState,
             tilesLeft: numHoles,
           });
           let info = {
             opponent: this.opponent,
             currentBoard: currentState,
-            solution: solution,
+            solutionBoard: solution,
             tilesLeft: numHoles,
             answerableCells: currentState,
           }
@@ -95,14 +94,13 @@ class ActiveGame extends React.Component {
         }, 1000);
         this.setState({
           currentBoard: info.currentBoard,
-          solution: info.solution,
+          solutionBoard: info.solution,
           answerableCells: info.answerableCells,
           tilesLeft: info.tilesLeft,
           timerID: timerID
         });
       });
     } else {
-      //console.log('ip from activeGame: ', myIP);
       axios.get(myIP + '/games/getGame', {
         params: {boardId: this.userInfo.board_id}
       })
@@ -112,7 +110,6 @@ class ActiveGame extends React.Component {
         let boardState = JSON.parse(temp.board_state);
         let answerableCells = JSON.parse(temp.answerable_cells);
         let numHoles = parseInt(temp.holes);
-        console.log('Board.data ', board.data);
 
         const timerID = setInterval(() => {
           let currTime = this.state.time + 1;
@@ -120,7 +117,7 @@ class ActiveGame extends React.Component {
         }, 1000);
         this.setState({
           currentBoard: boardState,
-          solution: solution,
+          solutionBoard: solution,
           tilesLeft: numHoles,
           timerID: timerID,
           answerableCells: answerableCells,
@@ -155,7 +152,7 @@ class ActiveGame extends React.Component {
 
     for (let row = 0; row < 9; row++) {
       for (let col = 0; col < 9; col++) {
-        if (playerBoard[row][col] !== solBoard[row][col]) {
+        if (playerBoard[row][col] != solBoard[row][col]) {
           incorrectTiles.push({row: row, col: col});
         }
       }
@@ -165,8 +162,9 @@ class ActiveGame extends React.Component {
     });
     axios.put(myIP + '/games/updateGame', {
       params: {
-        boardState: this.state.currenctBoard,
-        incorrectTiles: incorrectTiles
+        boardState: this.state.currentBoard,
+        incorrectTiles: incorrectTiles,
+        boardId: this.userInfo.board_id
       }
     })
     .then()
