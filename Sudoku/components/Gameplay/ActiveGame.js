@@ -123,7 +123,7 @@ class ActiveGame extends React.Component {
           answerableCells: answerableCells,
           tilesLeft: numHoles
         }, () => {
-          console.log('After setting state after fetching game: ', this.state);
+          this.isCorrect(true);
         });
       })
       .catch(err => {
@@ -147,7 +147,7 @@ class ActiveGame extends React.Component {
     // })
   }
 
-  isCorrect() {
+  isCorrect(mounting) {
     let playerBoard = this.state.currentBoard;
     let solBoard = this.state.solutionBoard;
     let incorrectTiles = {};
@@ -164,13 +164,15 @@ class ActiveGame extends React.Component {
       this.setState({
         incorrectTiles: incorrectTiles
       });
-      axios.put(myIP + '/games/updateGame', {
-        params: {
-          boardState: this.state.currentBoard,
-          incorrectTiles: incorrectTiles,
-          boardId: this.userInfo.board_id
-        }
-      })
+      if (!mounting) {
+        axios.put(myIP + '/games/updateGame', {
+          params: {
+            boardState: this.state.currentBoard,
+            incorrectTiles: incorrectTiles,
+            boardId: this.userInfo.board_id
+          }
+        })
+      }
     }
   }
 

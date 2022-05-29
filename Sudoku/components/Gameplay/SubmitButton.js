@@ -8,7 +8,7 @@ const SubmitButton = props => {
     <TouchableOpacity
       style = {styles.button}
       onPress={() => {
-        props.isCorrect();
+        props.isCorrect(false);
       }}
       >
         <Text style={styles.childText}> Submit </Text>
