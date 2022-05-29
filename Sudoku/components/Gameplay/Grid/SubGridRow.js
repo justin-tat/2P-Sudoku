@@ -8,13 +8,17 @@ const SubGridRow = props => {
   let isZero = [];
   let nums = [];
   let isAnswerable = [];
+  let isIncorrect = [];
   for (let i = colIndex; i < colIndex + 3; i++) {
     let temp = props.answerableCells[rowIndex][i] === 0 ? 'player' : 'starter';
     let currNum = props.board[rowIndex][i] === 0 ? '_' : props.board[rowIndex][i];
     let answerable = props.answerableCells[rowIndex][i] === 0 ? true : false;
+    let string = props.startingRow + i.toString();
+    let tileStatus = props.incorrectTiles[string] === true ? true : false;
     isZero.push(temp);
     nums.push(currNum);
     isAnswerable.push(answerable);
+    isIncorrect.push(tileStatus);
   }
   return (
     <View style={styles.subGridRow}>
@@ -28,6 +32,7 @@ const SubGridRow = props => {
         selectTile={props.selectTile}
         selectedTile={props.selectedTile}
         isAnswerable = {isAnswerable[0]}
+        isIncorrect={isIncorrect[0]}
       />
       <Cell
         style={isZero[1]}
@@ -39,6 +44,7 @@ const SubGridRow = props => {
         selectTile={props.selectTile}
         selectedTile={props.selectedTile}
         isAnswerable = {isAnswerable[1]}
+        isIncorrect={isIncorrect[1]}
       />
       <Cell
         style={isZero[2]}
@@ -50,6 +56,7 @@ const SubGridRow = props => {
         selectTile={props.selectTile}
         selectedTile={props.selectedTile}
         isAnswerable = {isAnswerable[2]}
+        isIncorrect={isIncorrect[2]}
       />
     </View>
   );

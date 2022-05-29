@@ -5,10 +5,10 @@ const Cell = props => {
   const {onPress, title = props.title} = props;
   let isSelected;
   let player = props.isAnswerable ? 'player' : '';
+  let tileStatus = props.isIncorrect ? 'incorrect' : '';
   if (props.xcor === props.selectedTile[0] && props.ycor === props.selectedTile[1]) {
     isSelected = 'isSelected';
   }
-
   return (
     <TouchableOpacity
       style={[styles.button, styles[isSelected]]}
@@ -17,7 +17,7 @@ const Cell = props => {
           props.selectTile(props.xcor, props.ycor);
         }
       }}>
-      <Text style={[styles[props.style], styles.cellText]}>{title}</Text>
+      <Text style={[styles[props.style], styles.cellText, styles[tileStatus]]}>{title}</Text>
     </TouchableOpacity>
   );
 };
@@ -57,6 +57,9 @@ const styles = StyleSheet.create({
   player: {
     color: 'black',
   },
+  incorrect: {
+    color:'red'
+  }
 });
 
 export default Cell;

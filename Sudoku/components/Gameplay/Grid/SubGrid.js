@@ -11,7 +11,8 @@ const SubGrid = props => {
         selectTile={props.selectTile}
         selectedTile={props.selectedTile}
         startingCol={props.startingCol}
-        answerableCells = {props.answerableCells}
+        answerableCells={props.answerableCells}
+        incorrectTiles={props.incorrectTiles}
       />
       <SubGridRow
         board={props.board}
@@ -19,7 +20,8 @@ const SubGrid = props => {
         selectTile={props.selectTile}
         selectedTile={props.selectedTile}
         startingCol={props.startingCol}
-        answerableCells = {props.answerableCells}
+        answerableCells={props.answerableCells}
+        incorrectTiles={props.incorrectTiles}
       />
       <SubGridRow
         board={props.board}
@@ -27,7 +29,8 @@ const SubGrid = props => {
         selectTile={props.selectTile}
         selectedTile={props.selectedTile}
         startingCol={props.startingCol}
-        answerableCells = {props.answerableCells}
+        answerableCells={props.answerableCells}
+        incorrectTiles={props.incorrectTiles}
       />
     </View>
   );

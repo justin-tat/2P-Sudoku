@@ -94,7 +94,7 @@ class ActiveGame extends React.Component {
         }, 1000);
         this.setState({
           currentBoard: info.currentBoard,
-          solutionBoard: info.solution,
+          solutionBoard: info.solutionBoard,
           answerableCells: info.answerableCells,
           tilesLeft: info.tilesLeft,
           timerID: timerID
@@ -122,6 +122,8 @@ class ActiveGame extends React.Component {
           timerID: timerID,
           answerableCells: answerableCells,
           tilesLeft: numHoles
+        }, () => {
+          console.log('After setting state after fetching game: ', this.state);
         });
       })
       .catch(err => {
@@ -148,26 +150,28 @@ class ActiveGame extends React.Component {
   isCorrect() {
     let playerBoard = this.state.currentBoard;
     let solBoard = this.state.solutionBoard;
-    let incorrectTiles = [];
+    let incorrectTiles = {};
 
     for (let row = 0; row < 9; row++) {
       for (let col = 0; col < 9; col++) {
         if (playerBoard[row][col] != solBoard[row][col]) {
-          incorrectTiles.push({row: row, col: col});
+          let string = row.toString() + col.toString();
+          incorrectTiles[string] = true;
         }
       }
     }
-    this.setState({
-      incorrectTiles: incorrectTiles
-    });
-    axios.put(myIP + '/games/updateGame', {
-      params: {
-        boardState: this.state.currentBoard,
-        incorrectTiles: incorrectTiles,
-        boardId: this.userInfo.board_id
-      }
-    })
-    .then()
+    if (incorrectTiles.length !== 0) {
+      this.setState({
+        incorrectTiles: incorrectTiles
+      });
+      axios.put(myIP + '/games/updateGame', {
+        params: {
+          boardState: this.state.currentBoard,
+          incorrectTiles: incorrectTiles,
+          boardId: this.userInfo.board_id
+        }
+      })
+    }
   }
 
   selectTile(xcor, ycor) {
@@ -225,6 +229,7 @@ class ActiveGame extends React.Component {
                 selectTile={this.selectTile}
                 selectedTile={this.state.selectedTile}
                 answerableCells = {this.state.answerableCells}
+                incorrectTiles = {this.state.incorrectTiles}
               />
               <Options selectOption={this.selectOption} />
               <SubmitButton isCorrect={this.isCorrect}/>
