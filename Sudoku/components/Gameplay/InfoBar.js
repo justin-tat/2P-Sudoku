@@ -17,7 +17,7 @@ const InfoBar = props => {
         onPress={() => {
           navigation.navigate('LandingPage');
         }}>
-        <Text style={styles.mainMenuText}> Home </Text>
+        <Text style={styles.childText}> Home </Text>
       </TouchableOpacity>
     </View>
   );
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
   infoBar: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    flex: 0.7,
+    flex: 1,
     marginBottom: 10,
     //backgroundColor: 'black',
   },

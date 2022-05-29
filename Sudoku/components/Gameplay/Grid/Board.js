@@ -41,7 +41,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     //justifyContent: 'center',
     flexDirection: 'column',
-    backgroundColor: 'black',
+    backgroundColor: '#708090',
+    marginBottom: 15
   },
 });
 

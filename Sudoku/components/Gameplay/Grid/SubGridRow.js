@@ -9,7 +9,6 @@ const SubGridRow = props => {
   let nums = [];
   let isAnswerable = [];
   for (let i = colIndex; i < colIndex + 3; i++) {
-    //let temp = props.board[rowIndex][i] === 0 ? 'player' : 'starter';
     let temp = props.answerableCells[rowIndex][i] === 0 ? 'player' : 'starter';
     let currNum = props.board[rowIndex][i] === 0 ? '_' : props.board[rowIndex][i];
     let answerable = props.answerableCells[rowIndex][i] === 0 ? true : false;

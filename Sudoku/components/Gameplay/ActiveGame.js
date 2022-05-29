@@ -3,6 +3,7 @@ import Board from './Grid/Board.js';
 import Options from './Options.js';
 import InfoBar from './InfoBar.js';
 import GameLoadingScreen from './GameLoadingScreen.js';
+import SubmitButton from './SubmitButton.js';
 import {StyleSheet, Text, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import axios from 'axios';
@@ -21,6 +22,7 @@ class ActiveGame extends React.Component {
       solutionBoard: board[2],
       answerableCells: board[1],
       selectedTile: [],
+      incorrectTiles: [],
       selectedOption: 0,
       numMistakes: 0,
       tilesLeft: holes,
@@ -30,6 +32,7 @@ class ActiveGame extends React.Component {
     };
     this.selectTile = this.selectTile.bind(this);
     this.selectOption = this.selectOption.bind(this);
+    this.isCorrect = this.isCorrect.bind(this);
     this.userInfo = props.route.params;
   }
   componentDidMount() {
@@ -137,28 +140,36 @@ class ActiveGame extends React.Component {
     });
     this.socket.emit('end');
     this.socket.close();
-    axios.put(myIP + '/games/updateGame', {
-      params: {
-        boardState: this.state.currentBoard,
+    // axios.put(myIP + '/games/updateGame', {
+    //   params: {
+    //     boardState: this.state.currentBoard,
 
-      }
-    })
+    //   }
+    // })
   }
 
   isCorrect() {
     let playerBoard = this.state.currentBoard;
     let solBoard = this.state.solutionBoard;
-    let correctness = {isIncorrect: false, incorrectTiles: []};
+    let incorrectTiles = [];
 
     for (let row = 0; row < 9; row++) {
       for (let col = 0; col < 9; col++) {
         if (playerBoard[row][col] !== solBoard[row][col]) {
-          correctness.incorrectTiles.push({row: row, col: col});
-          correctness.isIncorrect = true;
+          incorrectTiles.push({row: row, col: col});
         }
       }
     }
-    return correctness;
+    this.setState({
+      incorrectTiles: incorrectTiles
+    });
+    axios.put(myIP + '/games/updateGame', {
+      params: {
+        boardState: this.state.currenctBoard,
+        incorrectTiles: incorrectTiles
+      }
+    })
+    .then()
   }
 
   selectTile(xcor, ycor) {
@@ -218,6 +229,7 @@ class ActiveGame extends React.Component {
                 answerableCells = {this.state.answerableCells}
               />
               <Options selectOption={this.selectOption} />
+              <SubmitButton isCorrect={this.isCorrect}/>
             </View>
           }
           {this.state.loadingScreen && 
