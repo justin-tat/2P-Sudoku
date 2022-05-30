@@ -173,6 +173,8 @@ class ActiveGame extends React.Component {
           }
         })
       }
+    } else {
+      //axios.put()
     }
   }
 
@@ -185,23 +187,6 @@ class ActiveGame extends React.Component {
   // Always update cell with the entered number
   // On submittal, iterate through the currentState of the board, adding all incorrect tiles to correctness object. If there is any incorrect, pass this down to cell and display the incorrect ones. 
   selectOption(num) {
-    // if (+num === this.state.solutionBoard[this.state.selectedTile[1]][this.state.selectedTile[0]]) {
-    //   let updatedBoard = this.state.currentBoard;
-    //   updatedBoard[this.state.selectedTile[1]][this.state.selectedTile[0]] = +num;
-
-    //   this.setState({
-    //     currentBoard: updatedBoard,
-    //     selectedTile: [],
-    //   });
-    // } else {
-    //   let updatedMistakes = this.state.numMistakes;
-    //   updatedMistakes++;
-    //   this.setState({
-    //     numMistakes: updatedMistakes,
-    //     selectedTile: [],
-    //   });
-    // }
-    //Put in what happens if you're wrong here
     let updatedBoard = this.state.currentBoard;
     let delta = this.state.tilesLeft;
     if (updatedBoard[this.state.selectedTile[1]][this.state.selectedTile[0]] === 0) {

@@ -4,14 +4,19 @@ import {Text, StyleSheet, TouchableOpacity} from 'react-native';
 const Cell = props => {
   const {onPress, title = props.title} = props;
   let isSelected;
+  let isHighlighted;
   let player = props.isAnswerable ? 'player' : '';
   let tileStatus = props.isIncorrect ? 'incorrect' : '';
   if (props.xcor === props.selectedTile[0] && props.ycor === props.selectedTile[1]) {
     isSelected = 'isSelected';
+  } else if (props.xcor === props.selectedTile[0]) {
+    isHighlighted = 'highlight';
+  } else if (props.ycor === props.selectedTile[1]) {
+    isHighlighted = 'highlight'
   }
   return (
     <TouchableOpacity
-      style={[styles.button, styles[isSelected]]}
+      style={[styles.button, styles[isSelected], styles[isHighlighted]]}
       onPress={() => {
         if (props.isAnswerable) {
           props.selectTile(props.xcor, props.ycor);
@@ -46,6 +51,9 @@ const styles = StyleSheet.create({
   },
   isSelected: {
     backgroundColor: 'pink',
+  },
+  highlight: {
+    backgroundColor: '#95a5a6'
   },
   cellText: {
     fontWeight: 'bold',
