@@ -50,15 +50,13 @@ class Login extends React.Component {
     this.setState({
       errors: errorsDupe,
     });
-    //don't need to contact db if entries are invalid
     if (!isValid) {
       return;
     }
-    //console.log('Firing axios call');
     axios.get(myIP + '/users/getAccount', {
       params: {username: this.state.username, password: this.state.password},
     })
-    
+
     .then((info) => {
       this.props.navigation.navigate('MainMenuLandingPage', info.data);
     })

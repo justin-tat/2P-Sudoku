@@ -29,11 +29,13 @@ class ActiveGame extends React.Component {
       time: 0,
       timerID: 0,
       loadingScreen: false,
+      gameId: 0
     };
     this.selectTile = this.selectTile.bind(this);
     this.selectOption = this.selectOption.bind(this);
     this.isCorrect = this.isCorrect.bind(this);
     this.userInfo = props.route.params;
+    console.log("userInfo", this.userInfo);
   }
   componentDidMount() {
     this.socket = io(myIP);
@@ -105,11 +107,13 @@ class ActiveGame extends React.Component {
         params: {boardId: this.userInfo.board_id}
       })
       .then(board => {
+        console.log("boardData", board.data);
         let temp = JSON.parse(JSON.stringify(board.data));
         let solution = JSON.parse(temp.board_solution);
         let boardState = JSON.parse(temp.board_state);
         let answerableCells = JSON.parse(temp.answerable_cells);
         let numHoles = parseInt(temp.holes);
+        let gameId = parseInt(temp.game_id);
 
         const timerID = setInterval(() => {
           let currTime = this.state.time + 1;
@@ -121,10 +125,12 @@ class ActiveGame extends React.Component {
           tilesLeft: numHoles,
           timerID: timerID,
           answerableCells: answerableCells,
-          tilesLeft: numHoles
+          tilesLeft: numHoles,
+          gameId: gameId
         }, () => {
           this.isCorrect(true);
         });
+
       })
       .catch(err => {
         console.log('Errored in client side getGame get request', err);
@@ -160,7 +166,8 @@ class ActiveGame extends React.Component {
         }
       }
     }
-    if (incorrectTiles.length !== 0) {
+    //console.log(incorrectTiles)
+    if (Object.keys(incorrectTiles).length !== 0) {
       this.setState({
         incorrectTiles: incorrectTiles
       });
@@ -174,7 +181,14 @@ class ActiveGame extends React.Component {
         })
       }
     } else {
-      //axios.put()
+      console.log('Trying to finish game');
+      axios.put(myIP + '/games/finishGame', {
+        params: {
+          boardId: this.userInfo.board_id,
+          gameId: this.state.gameId,
+          userId: this.userInfo.id,
+        }
+      })
     }
   }
 
