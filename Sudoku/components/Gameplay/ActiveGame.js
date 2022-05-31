@@ -35,7 +35,7 @@ class ActiveGame extends React.Component {
     this.selectOption = this.selectOption.bind(this);
     this.isCorrect = this.isCorrect.bind(this);
     this.userInfo = props.route.params;
-    console.log("userInfo", this.userInfo);
+    //console.log("userInfo", this.userInfo);
   }
   componentDidMount() {
     this.socket = io(myIP);
@@ -47,6 +47,7 @@ class ActiveGame extends React.Component {
       });
 
       this.socket.on('makeRecord', opponent => {
+        console.log('======Making a record======');
         this.opponent = opponent
         let parsedOpponent = opponent.split(' ');
         let opponentParam = {
@@ -70,11 +71,14 @@ class ActiveGame extends React.Component {
           let solution = JSON.parse(response.boardSolution);
           let currentState = JSON.parse(response.boardState);
           let numHoles = parseInt(response.holes);
+          let gameId = parseInt(response.game_id);
+          console.log('Response from makeGame: ', gameId);
           this.setState({
             currentBoard: currentState,
             solutionBoard: solution,
             answerableCells: currentState,
             tilesLeft: numHoles,
+            gameId: gameId
           });
           let info = {
             opponent: this.opponent,
@@ -82,12 +86,14 @@ class ActiveGame extends React.Component {
             solutionBoard: solution,
             tilesLeft: numHoles,
             answerableCells: currentState,
+            gameId: gameId
           }
           this.socket.emit('gameRecordCreated', info);
         })
       });
 
       this.socket.on('startGame', (info) => {
+        console.log('Info:', info);
         this.setState({loadingScreen: false});
         //Start timer
         const timerID = setInterval(() => {
@@ -99,7 +105,8 @@ class ActiveGame extends React.Component {
           solutionBoard: info.solutionBoard,
           answerableCells: info.answerableCells,
           tilesLeft: info.tilesLeft,
-          timerID: timerID
+          timerID: timerID,
+          gameId: info.gameId
         });
       });
     } else {
@@ -107,7 +114,7 @@ class ActiveGame extends React.Component {
         params: {boardId: this.userInfo.board_id}
       })
       .then(board => {
-        console.log("boardData", board.data);
+        //console.log("boardData", board.data);
         let temp = JSON.parse(JSON.stringify(board.data));
         let solution = JSON.parse(temp.board_solution);
         let boardState = JSON.parse(temp.board_state);
@@ -129,6 +136,7 @@ class ActiveGame extends React.Component {
           gameId: gameId
         }, () => {
           this.isCorrect(true);
+          
         });
 
       })
@@ -166,12 +174,12 @@ class ActiveGame extends React.Component {
         }
       }
     }
-    //console.log(incorrectTiles)
     if (Object.keys(incorrectTiles).length !== 0) {
       this.setState({
         incorrectTiles: incorrectTiles
       });
       if (!mounting) {
+        console.log('Updating game');
         axios.put(myIP + '/games/updateGame', {
           params: {
             boardState: this.state.currentBoard,
@@ -181,13 +189,15 @@ class ActiveGame extends React.Component {
         })
       }
     } else {
-      console.log('Trying to finish game');
+      console.log('gameId: ', this.state.gameId);
       axios.put(myIP + '/games/finishGame', {
         params: {
           boardId: this.userInfo.board_id,
           gameId: this.state.gameId,
           userId: this.userInfo.id,
         }
+      }).then((status) => {
+        console.log('Status.data: ', status.data);
       })
     }
   }
