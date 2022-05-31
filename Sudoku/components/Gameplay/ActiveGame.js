@@ -4,6 +4,7 @@ import Options from './Options.js';
 import InfoBar from './InfoBar.js';
 import GameLoadingScreen from './GameLoadingScreen.js';
 import SubmitButton from './SubmitButton.js';
+import OutcomeMessage from './OutcomeMessage.js';
 import {StyleSheet, Text, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import axios from 'axios';
@@ -29,7 +30,8 @@ class ActiveGame extends React.Component {
       time: 0,
       timerID: 0,
       loadingScreen: false,
-      gameId: 0
+      gameId: 0,
+      gameStatus: '',
     };
     this.selectTile = this.selectTile.bind(this);
     this.selectOption = this.selectOption.bind(this);
@@ -111,10 +113,15 @@ class ActiveGame extends React.Component {
       });
     } else {
       axios.get(myIP + '/games/getGame', {
-        params: {boardId: this.userInfo.board_id}
+        params: {
+          boardId: this.userInfo.board_id, 
+          userId: this.userInfo.id
+        }
       })
       .then(board => {
-        //console.log("boardData", board.data);
+        if(board.data === 'You lost') {
+          throw new Error(board.data);
+        }
         let temp = JSON.parse(JSON.stringify(board.data));
         let solution = JSON.parse(temp.board_solution);
         let boardState = JSON.parse(temp.board_state);
@@ -126,6 +133,7 @@ class ActiveGame extends React.Component {
           let currTime = this.state.time + 1;
           this.setState({time: currTime});
         }, 1000);
+
         this.setState({
           currentBoard: boardState,
           solutionBoard: solution,
@@ -136,12 +144,29 @@ class ActiveGame extends React.Component {
           gameId: gameId
         }, () => {
           this.isCorrect(true);
-          
         });
-
+        throw new Error('You still in the game');
       })
       .catch(err => {
-        console.log('Errored in client side getGame get request', err);
+        if (String(err) === 'Error: Player lost') {
+          return axios.get(myIP + '/users/getAccount', {
+            params: {username: this.userInfo.name, password: this.userInfo.password},
+          })
+        } else if (String(err) === 'Error: You still in the game') {
+          throw new Error('Skip the next one');
+        }
+      })
+      .then((result) => {
+        this.setState({
+          gameStatus: 'You lost',
+        });
+        console.log('result.data from losing get request', result.data);
+        this.userInfo = result.data;
+      })
+      .catch(err => {
+        if (String(err) !== 'Error: You still in the game') {
+          console.log('Game should still be ongoing');
+        }
       })
     }
   }
@@ -179,7 +204,6 @@ class ActiveGame extends React.Component {
         incorrectTiles: incorrectTiles
       });
       if (!mounting) {
-        console.log('Updating game');
         axios.put(myIP + '/games/updateGame', {
           params: {
             boardState: this.state.currentBoard,
@@ -189,7 +213,6 @@ class ActiveGame extends React.Component {
         })
       }
     } else {
-      console.log('gameId: ', this.state.gameId);
       axios.put(myIP + '/games/finishGame', {
         params: {
           boardId: this.userInfo.board_id,
@@ -197,7 +220,21 @@ class ActiveGame extends React.Component {
           userId: this.userInfo.id,
         }
       }).then((status) => {
-        console.log('Status.data: ', status.data);
+        return Promise.all([axios.get(myIP + '/users/getAccount', {
+          params: {username: this.userInfo.name, password: this.userInfo.password},
+          }), 
+          status.data
+        ])
+      })
+      .then(arr => {
+        this.setState({
+          gameStatus: arr[1]
+        });
+        //console.log('arr[0].data: ', arr[0].data);
+        this.userInfo = arr[0].data;
+      })
+      .catch((err) => {
+        console.log('Errored in finishGame', err);
       })
     }
   }
@@ -225,10 +262,11 @@ class ActiveGame extends React.Component {
   }
 
   render() {
+    const { navigation } = this.props;
     return (
       <SafeAreaView style={styles.gameScreen}>
         <View style={styles.container}>
-          {!this.state.loadingScreen && 
+          {!this.state.loadingScreen && this.state.gameStatus === '' &&
             <View style={styles.activeGame}>
               <InfoBar
               rating={this.state.rating}
@@ -248,6 +286,10 @@ class ActiveGame extends React.Component {
           }
           {this.state.loadingScreen && 
             <GameLoadingScreen/>
+          }
+          {
+            this.state.gameStatus !== '' && 
+            <OutcomeMessage userInfo={this.userInfo} status={this.state.gameStatus}/>
           }
         </View>
       </SafeAreaView>

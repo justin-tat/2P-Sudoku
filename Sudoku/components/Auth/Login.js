@@ -25,7 +25,6 @@ class Login extends React.Component {
       username: 'Username',
       password: 'Password',
     };
-    console.log('My Address: ', myIP);
   }
   onChangeText(event, field) {
     this.setState({[field]: event.nativeEvent.text});
@@ -56,7 +55,6 @@ class Login extends React.Component {
     axios.get(myIP + '/users/getAccount', {
       params: {username: this.state.username, password: this.state.password},
     })
-
     .then((info) => {
       this.props.navigation.navigate('MainMenuLandingPage', info.data);
     })
