@@ -148,6 +148,7 @@ class ActiveGame extends React.Component {
         throw new Error('You still in the game');
       })
       .catch(err => {
+        console.log('err from get Game', err);
         if (String(err) === 'Error: Player lost') {
           return axios.get(myIP + '/users/getAccount', {
             params: {username: this.userInfo.name, password: this.userInfo.password},
