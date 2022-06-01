@@ -37,7 +37,6 @@ class ActiveGame extends React.Component {
     this.selectOption = this.selectOption.bind(this);
     this.isCorrect = this.isCorrect.bind(this);
     this.userInfo = props.route.params;
-    //console.log("userInfo", this.userInfo);
   }
   componentDidMount() {
     this.socket = io(myIP);
@@ -49,7 +48,6 @@ class ActiveGame extends React.Component {
       });
 
       this.socket.on('makeRecord', opponent => {
-        console.log('======Making a record======');
         this.opponent = opponent
         let parsedOpponent = opponent.split(' ');
         let opponentParam = {
@@ -74,7 +72,6 @@ class ActiveGame extends React.Component {
           let currentState = JSON.parse(response.boardState);
           let numHoles = parseInt(response.holes);
           let gameId = parseInt(response.game_id);
-          console.log('Response from makeGame: ', gameId);
           this.setState({
             currentBoard: currentState,
             solutionBoard: solution,
@@ -95,7 +92,6 @@ class ActiveGame extends React.Component {
       });
 
       this.socket.on('startGame', (info) => {
-        console.log('Info:', info);
         this.setState({loadingScreen: false});
         //Start timer
         const timerID = setInterval(() => {
@@ -121,7 +117,7 @@ class ActiveGame extends React.Component {
       .then(board => {
         if(board.data === 'You lost') {
           throw new Error(board.data);
-        }
+        } 
         let temp = JSON.parse(JSON.stringify(board.data));
         let solution = JSON.parse(temp.board_solution);
         let boardState = JSON.parse(temp.board_state);
@@ -148,8 +144,7 @@ class ActiveGame extends React.Component {
         throw new Error('You still in the game');
       })
       .catch(err => {
-        console.log('err from get Game', err);
-        if (String(err) === 'Error: Player lost') {
+        if (String(err) === 'Error: You lost') {
           return axios.get(myIP + '/users/getAccount', {
             params: {username: this.userInfo.name, password: this.userInfo.password},
           })
@@ -158,15 +153,15 @@ class ActiveGame extends React.Component {
         }
       })
       .then((result) => {
+        this.userInfo = result.data;
         this.setState({
           gameStatus: 'You lost',
         });
-        console.log('result.data from losing get request', result.data);
-        this.userInfo = result.data;
+        
       })
       .catch(err => {
         if (String(err) !== 'Error: You still in the game') {
-          console.log('Game should still be ongoing');
+          //Game should still be ongoing. Only threw error to skip above then statement
         }
       })
     }

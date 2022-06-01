@@ -81,7 +81,6 @@ class SignUp extends React.Component {
         );
       })
       .catch(err => {
-        console.log('Errored validating account info: ', err.response.data);
         if (err.response.data === 'Username is already taken') {
           errorsDupe.newUsername = err.response.data;
           this.setState({

@@ -27,12 +27,12 @@ class GameLoadingScreen extends Component {
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={styles.modalText}>No Opponents Found! Waiting for an Opponent to join the Lobby</Text>
-              <Pressable
+              {/* <Pressable
                 style={[styles.button, styles.buttonClose]}
                 onPress={() => this.setModalVisible(!modalVisible)}
               >
                 <Text style={styles.textStyle}>Hide Modal</Text>
-              </Pressable>
+              </Pressable> */}
             </View>
           </View>
         </Modal>

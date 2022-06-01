@@ -4,7 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 
 const OutcomeMessage = (props) => {
   const navigation = useNavigation();
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(true);
   return (
     <View style={styles.centeredView}>
       <Modal
@@ -13,7 +13,6 @@ const OutcomeMessage = (props) => {
         visible={modalVisible}
         onRequestClose={() => {
           Alert.alert("Modal has been closed.");
-          setModalVisible(!modalVisible);
         }}
       >
         <View style={styles.centeredView}>
