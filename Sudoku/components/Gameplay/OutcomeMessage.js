@@ -18,6 +18,7 @@ const OutcomeMessage = (props) => {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>{props.status}</Text>
+            <Text style={styles.modalText}>{}</Text>
             <Pressable
               style={[styles.button, styles.buttonClose]}
               onPress={() => {

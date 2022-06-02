@@ -1,6 +1,6 @@
 import React from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {StyleSheet, TouchableOpacity, Text} from 'react-native';
+import {StyleSheet, TouchableOpacity, Text, Alert} from 'react-native';
 
 const MainMenu = ({route, navigation}) => {
   const userInfo = route.params;
@@ -29,9 +29,9 @@ const MainMenu = ({route, navigation}) => {
       <TouchableOpacity
         style={[styles.mainMenuOption, styles.activeGame]}
         onPress={() => {
-          navigation.navigate('ActiveGame', userInfo);
+          Alert.alert('Not implemented yet!');
         }}>
-        <Text style={styles.mainMenuText}>Proceed Without An Account</Text>
+        <Text style={styles.mainMenuText}>See Game History</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.mainMenuOption, styles.activeGame]}

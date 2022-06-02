@@ -216,6 +216,7 @@ class ActiveGame extends React.Component {
           userId: this.userInfo.id,
         }
       }).then((status) => {
+        console.log('status', status.data);
         return Promise.all([axios.get(myIP + '/users/getAccount', {
           params: {username: this.userInfo.name, password: this.userInfo.password},
           }), 
@@ -224,7 +225,7 @@ class ActiveGame extends React.Component {
       })
       .then(arr => {
         this.setState({
-          gameStatus: arr[1]
+          gameStatus: arr[1].isFinished
         });
         //console.log('arr[0].data: ', arr[0].data);
         this.userInfo = arr[0].data;

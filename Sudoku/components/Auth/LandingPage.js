@@ -21,13 +21,13 @@ const LandingPage = ({navigation}) => {
         <Text style={styles.landingPageText}>Login</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={[styles.landingPageOption, styles.activeGame]}
         onPress={() => {
-          navigation.navigate('ActiveGame');
+          Alert.alert()
         }}>
         <Text style={styles.landingPageText}>Proceed Without An Account</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </SafeAreaView>
   );
 };
