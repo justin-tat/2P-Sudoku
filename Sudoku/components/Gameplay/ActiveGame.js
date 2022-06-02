@@ -5,7 +5,7 @@ import InfoBar from './InfoBar.js';
 import GameLoadingScreen from './GameLoadingScreen.js';
 import SubmitButton from './SubmitButton.js';
 import OutcomeMessage from './OutcomeMessage.js';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, Alert} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import axios from 'axios';
 import io from "socket.io-client";
@@ -245,6 +245,9 @@ class ActiveGame extends React.Component {
   // Always update cell with the entered number
   // On submittal, iterate through the currentState of the board, adding all incorrect tiles to correctness object. If there is any incorrect, pass this down to cell and display the incorrect ones. 
   selectOption(num) {
+    if (this.state.selectedTile.length === 0) {
+      return;
+    }
     let updatedBoard = this.state.currentBoard;
     let delta = this.state.tilesLeft;
     if (updatedBoard[this.state.selectedTile[1]][this.state.selectedTile[0]] === 0) {
