@@ -6,6 +6,7 @@
 <img alt="React Native" src="https://img.shields.io/badge/React%20Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" />
 <img alt="MUI" src="https://img.shields.io/badge/Material%20UI-007FFF?style=for-the-badge&logo=mui&logoColor=white" />
 <img alt="Nodejs" src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" />
+<img alt="Socket.IO-Client" src="https://img.shields.io/badge/Socket.io%20Client-F74242?style=for-the-badge&logo=socket.io&logoColor=white" />
 
 <p/>
 
@@ -36,9 +37,12 @@
 
 
 
+## Further Reading
+https://medium.com/purple-theory/what-is-elo-rating-c4eb7a9061e0
 
+https://www.geeksforgeeks.org/elo-rating-algorithm/
 
-### Technologies
+## Technologies
 - React-Native
 - Babel
 - Socket.IO-Client
@@ -46,6 +50,6 @@
 - Material-UI
 - React-Native Navigation
 
-### Author Info
+## Author Info
 - LinkedIn:  https://www.linkedin.com/in/justin-tat-30a994238/
 
