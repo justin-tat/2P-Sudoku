@@ -5,7 +5,7 @@ import InfoBar from './InfoBar.js';
 import GameLoadingScreen from './GameLoadingScreen.js';
 import SubmitButton from './SubmitButton.js';
 import OutcomeMessage from './OutcomeMessage.js';
-import {StyleSheet, Text, View, Alert} from 'react-native';
+import {StyleSheet, Text, View, Alert, Animated, Easing} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import axios from 'axios';
 import io from "socket.io-client";
@@ -37,6 +37,8 @@ class ActiveGame extends React.Component {
     this.selectOption = this.selectOption.bind(this);
     this.isCorrect = this.isCorrect.bind(this);
     this.userInfo = props.route.params;
+    this.triggerWiggle = this.triggerWiggle.bind(this);
+    this.animation = new Animated.Value(1);
   }
   componentDidMount() {
     this.socket = io(myIP);
@@ -167,6 +169,7 @@ class ActiveGame extends React.Component {
     }
   }
 
+
   componentWillUnmount() {
     clearInterval(this.state.timerID);
     this.setState({
@@ -180,6 +183,16 @@ class ActiveGame extends React.Component {
 
     //   }
     // })
+  }
+
+  triggerWiggle() {
+    this.animation.setValue(1);
+    Animated.timing(this.animation, {
+      duration: 400,
+      toValue: 3,
+      ease: Easing.bounce,
+      useNativeDriver: true
+    }).start();
   }
 
   isCorrect(mounting) {
@@ -246,6 +259,9 @@ class ActiveGame extends React.Component {
   // On submittal, iterate through the currentState of the board, adding all incorrect tiles to correctness object. If there is any incorrect, pass this down to cell and display the incorrect ones. 
   selectOption(num) {
     if (this.state.selectedTile.length === 0) {
+      
+      this.triggerWiggle();
+      //Alert.alert('Found it');
       return;
     }
     let updatedBoard = this.state.currentBoard;
@@ -262,12 +278,19 @@ class ActiveGame extends React.Component {
   }
 
   render() {
+    const interpolated = this.animation.interpolate({
+      inputRange: [0, 0.5, 1, 1.5, 2, 2.5, 3],
+      outputRange: [0, -15, 0, 15, 0, -15, 0]
+    });
+    const wiggle = {
+      transform: [{translateX: interpolated}]
+    }
     const { navigation } = this.props;
     return (
       <SafeAreaView style={styles.gameScreen}>
         <View style={styles.container}>
           {!this.state.loadingScreen && this.state.gameStatus === '' &&
-            <View style={styles.activeGame}>
+            <Animated.View style={[wiggle, styles.activeGame]}>
               <InfoBar
               rating={this.state.rating}
               numMistakes={this.state.numMistakes}
@@ -282,7 +305,7 @@ class ActiveGame extends React.Component {
               />
               <Options selectOption={this.selectOption} />
               <SubmitButton isCorrect={this.isCorrect}/>
-            </View>
+            </Animated.View>
           }
           {this.state.loadingScreen && 
             <GameLoadingScreen/>
@@ -307,7 +330,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flexGrow: 1,
-  }
+  }, 
 });
 
 export default ActiveGame;
