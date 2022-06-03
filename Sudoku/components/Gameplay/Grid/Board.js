@@ -1,12 +1,19 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, Animated} from 'react-native';
 import Row from './Row.js';
 import RowSet from './RowSet.js';
 
 const Board = props => {
+  const interpolated = props.animation.interpolate({
+    inputRange: [0, 0.5, 1, 1.5, 2, 2.5, 3],
+    outputRange: [0, -15, 0, 15, 0, -15, 0]
+  });
+  const wiggle = {
+    transform: [{translateX: interpolated}]
+  }
   const board = props.board;
   return (
-    <View style={styles.board}>
+    <Animated.View style={[wiggle, styles.board]}>
       <RowSet
         board={board}
         startingRow={0}
@@ -34,7 +41,7 @@ const Board = props => {
         answerableCells = {props.answerableCells}
         incorrectTiles = {props.incorrectTiles}
       />
-    </View>
+    </Animated.View>
   );
 };
 

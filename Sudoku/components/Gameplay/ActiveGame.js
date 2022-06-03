@@ -278,19 +278,12 @@ class ActiveGame extends React.Component {
   }
 
   render() {
-    const interpolated = this.animation.interpolate({
-      inputRange: [0, 0.5, 1, 1.5, 2, 2.5, 3],
-      outputRange: [0, -15, 0, 15, 0, -15, 0]
-    });
-    const wiggle = {
-      transform: [{translateX: interpolated}]
-    }
     const { navigation } = this.props;
     return (
       <SafeAreaView style={styles.gameScreen}>
         <View style={styles.container}>
           {!this.state.loadingScreen && this.state.gameStatus === '' &&
-            <Animated.View style={[wiggle, styles.activeGame]}>
+            <Animated.View style={[styles.activeGame]}>
               <InfoBar
               rating={this.state.rating}
               numMistakes={this.state.numMistakes}
@@ -302,6 +295,7 @@ class ActiveGame extends React.Component {
                 selectedTile={this.state.selectedTile}
                 answerableCells = {this.state.answerableCells}
                 incorrectTiles = {this.state.incorrectTiles}
+                animation={this.animation}
               />
               <Options selectOption={this.selectOption} />
               <SubmitButton isCorrect={this.isCorrect}/>
