@@ -32,18 +32,20 @@ class ActiveGame extends React.Component {
       loadingScreen: false,
       gameId: 0,
       gameStatus: '',
+      userInfo: props.route.params,
+      newRating: 0
     };
     this.selectTile = this.selectTile.bind(this);
     this.selectOption = this.selectOption.bind(this);
     this.isCorrect = this.isCorrect.bind(this);
-    this.userInfo = props.route.params;
+    //this.userInfo = props.route.params;
     this.triggerWiggle = this.triggerWiggle.bind(this);
     this.animation = new Animated.Value(1);
   }
   componentDidMount() {
     this.socket = io(myIP);
-    if (this.userInfo.board_id === "0") {
-      this.socket.emit("findGame", this.userInfo);
+    if (this.state.userInfo.board_id === "0") {
+      this.socket.emit("findGame", this.state.userInfo);
 
       this.socket.on('waitingForOpponent', () => {
         this.setState({loadingScreen: true});
@@ -58,9 +60,9 @@ class ActiveGame extends React.Component {
           name: parsedOpponent[2]
         };
         let playerOneParam = {
-          rating: this.userInfo.rating,
-          id: this.userInfo.id,
-          name: this.userInfo.name,
+          rating: this.state.userInfo.rating,
+          id: this.state.userInfo.id,
+          name: this.state.userInfo.name,
         }
         axios.post(myIP + '/games/makeGame', {
           params: {
@@ -112,8 +114,8 @@ class ActiveGame extends React.Component {
     } else {
       axios.get(myIP + '/games/getGame', {
         params: {
-          boardId: this.userInfo.board_id, 
-          userId: this.userInfo.id
+          boardId: this.state.userInfo.board_id, 
+          userId: this.state.userInfo.id
         }
       })
       .then(board => {
@@ -148,14 +150,14 @@ class ActiveGame extends React.Component {
       .catch(err => {
         if (String(err) === 'Error: You lost') {
           return axios.get(myIP + '/users/getAccount', {
-            params: {username: this.userInfo.name, password: this.userInfo.password},
+            params: {username: this.state.userInfo.name, password: this.state.userInfo.password},
           })
         } else if (String(err) === 'Error: You still in the game') {
           throw new Error('Skip the next one');
         }
       })
       .then((result) => {
-        this.userInfo = result.data;
+        this.state.userInfo = result.data;
         this.setState({
           gameStatus: 'You lost',
         });
@@ -217,31 +219,30 @@ class ActiveGame extends React.Component {
           params: {
             boardState: this.state.currentBoard,
             incorrectTiles: incorrectTiles,
-            boardId: this.userInfo.board_id
+            boardId: this.state.userInfo.board_id
           }
         })
       }
     } else {
       axios.put(myIP + '/games/finishGame', {
         params: {
-          boardId: this.userInfo.board_id,
+          boardId: this.state.userInfo.board_id,
           gameId: this.state.gameId,
-          userId: this.userInfo.id,
+          userId: this.state.userInfo.id,
         }
       }).then((status) => {
-        console.log('status', status.data);
         return Promise.all([axios.get(myIP + '/users/getAccount', {
-          params: {username: this.userInfo.name, password: this.userInfo.password},
+          params: {username: this.state.userInfo.name, password: this.state.userInfo.password},
           }), 
           status.data
         ])
       })
       .then(arr => {
         this.setState({
-          gameStatus: arr[1].isFinished
+          gameStatus: arr[1].isFinished,
+          newRating: arr[1].newRating,
+          userInfo: arr[0].data
         });
-        //console.log('arr[0].data: ', arr[0].data);
-        this.userInfo = arr[0].data;
       })
       .catch((err) => {
         console.log('Errored in finishGame', err);
@@ -306,7 +307,7 @@ class ActiveGame extends React.Component {
           }
           {
             this.state.gameStatus !== '' && 
-            <OutcomeMessage userInfo={this.userInfo} status={this.state.gameStatus}/>
+            <OutcomeMessage userInfo={this.state.userInfo} status={this.state.gameStatus} newRating={this.state.newRating}/>
           }
         </View>
       </SafeAreaView>

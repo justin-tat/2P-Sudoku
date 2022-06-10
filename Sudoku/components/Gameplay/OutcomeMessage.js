@@ -5,6 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 const OutcomeMessage = (props) => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(true);
+  //console.log('UserInfo passed into outcome message: ', props.userInfo);
   return (
     <View style={styles.centeredView}>
       <Modal
@@ -18,7 +19,7 @@ const OutcomeMessage = (props) => {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>{props.status}</Text>
-            <Text style={styles.modalText}>{}</Text>
+            <Text style={styles.modalText}>New Rating: {props.newRating}</Text>
             <Pressable
               style={[styles.button, styles.buttonClose]}
               onPress={() => {
@@ -26,17 +27,17 @@ const OutcomeMessage = (props) => {
                 navigation.navigate('MainMenu', props.userInfo);
               }}
             >
-              <Text style={styles.textStyle}>Hide Modal</Text>
+              <Text style={styles.textStyle}>Back to Main Menu</Text>
             </Pressable>
           </View>
         </View>
       </Modal>
-      <Pressable
+      {/* <Pressable
         style={[styles.button, styles.buttonOpen]}
         onPress={() => setModalVisible(true)}
       >
         <Text style={styles.textStyle}>Show Modal</Text>
-      </Pressable>
+      </Pressable> */}
     </View>
   );
 };
@@ -81,7 +82,8 @@ const styles = StyleSheet.create({
   },
   modalText: {
     marginBottom: 15,
-    textAlign: "center"
+    textAlign: "center",
+    fontSize: 20
   }
 });
 

@@ -6,6 +6,7 @@ const MainMenu = ({route, navigation}) => {
   const userInfo = route.params;
   return (
     <SafeAreaView style={styles.mainMenu}>
+
       {parseInt(userInfo.board_id, 10) === 0 && (
         <TouchableOpacity
           style={[styles.mainMenuOption, styles.makeAccount]}
@@ -33,12 +34,13 @@ const MainMenu = ({route, navigation}) => {
         }}>
         <Text style={styles.mainMenuText}>See Game History</Text>
       </TouchableOpacity>
+
       <TouchableOpacity
         style={[styles.mainMenuOption, styles.activeGame]}
         onPress={() => {
           navigation.navigate('LandingPage');
         }}>
-        <Text style={styles.mainMenuText}> Home </Text>
+        <Text style={styles.mainMenuText}> Log Out </Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
