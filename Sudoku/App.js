@@ -45,11 +45,11 @@ const App: () => Node = () => {
             component={SignUp}
             options={{headerShown: false}}
           />
-          <Stack.Screen
+          {/* <Stack.Screen
             name="ActiveGame"
             component={ActiveGame}
             options={{headerShown: false}}
-          />
+          /> */}
           <Stack.Screen
             name="MainMenuLandingPage"
             component={MainMenuLandingPage}
