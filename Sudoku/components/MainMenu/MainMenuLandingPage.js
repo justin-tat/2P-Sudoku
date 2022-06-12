@@ -22,11 +22,11 @@ const MainMenuLandingPage = ({route, navigation}) => {
         options={{headerShown: false}}
         initialParams={route.params}
       />
-      {/* <Stack.Screen
+      <Stack.Screen
         name="GameHistory"
         component={GameHistory}
-        options={{headerShown: true}}
-      /> */}
+        options={{headerShown: false}}
+      />
         {/* <Stack.Screen
           name="MainMenu"
           component={MainMenu}

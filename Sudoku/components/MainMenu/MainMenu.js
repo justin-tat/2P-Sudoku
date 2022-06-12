@@ -30,7 +30,7 @@ const MainMenu = ({route, navigation}) => {
       <TouchableOpacity
         style={[styles.mainMenuOption, styles.activeGame]}
         onPress={() => {
-          Alert.alert('Not implemented yet!');
+          navigation.navigate('GameHistory', userInfo);
         }}>
         <Text style={styles.mainMenuText}>See Game History</Text>
       </TouchableOpacity>
