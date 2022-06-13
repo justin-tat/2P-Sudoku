@@ -24,7 +24,7 @@
     "react-native-dotenv": "^3.3.1",
     "react-native-safe-area-context": "^4.2.4",
     "react-native-screens": "^3.13.1",
-    "react-native-table-component": "^1.2.2",
+    "react-native-table-component": "https://github.com/slice312/react-native-table-component.git",
     "rn-material-ui-textfield": "^1.0.6",
     "socket.io-client": "^4.5.0"
   },
