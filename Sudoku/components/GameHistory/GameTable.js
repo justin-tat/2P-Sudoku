@@ -1,54 +1,41 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, View, FlatList, ScrollView} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
-
+import {DataTable} from 'react-native-paper';
 import axios from 'axios';
-
-//Fetch all games associated with userId. Check if the name of the winner is equal to passed props. If it is, then you won, otherwise you didn't
-//Display current rating at top with games in scrollable list that does not show any delineation. 
 
 const GameTable = props => {
   const header = ['Date', 'Opponent', 'Opponent Rating', 'Result'];
-  //const [games, setGames] = useState([]);
-  const flexArr = [1, 2, 1, 1]
-  const games = [];
-  const widthArr = [];
-  for (let i = 0; i < 4; i++) {
-    let arr = [];
-    for (let j = 0; j < 4; j++) {
-      arr.push(`(${i},${j})`);
-    }
-    games.push(arr);
-    widthArr.push(80)
-  }
+
+  
   
   return (
+
       <View style={styles.table}>
-        <ScrollView horizontal={true}>
-          <View>
-            <Table borderStyle = {styles.tableBorder}>
-              <Row style={styles.header} data={header} flexArr={flexArr} textStyle={styles.tableText} widthArr={widthArr}/>
-            </Table>
-            <ScrollView style={styles.dataList}>
-              <Table borderStyle={styles.tableBorder}>
-                {
-                  games.map((game, index) => {
-                    return(
-                      <Row
-                        key={index}
-                        data={game}
-                        flexArr={flexArr}
-                        style={[styles.row, index%2 && styles.colorSwitch]}
-                        textStyle={{textAlign: 'center', fontWeight: '200'}}
-                      />
-                    )
-                  })
-                }
-              </Table>
-            </ScrollView>
-          </View>
-        </ScrollView>
+        <DataTable>
+          <DataTable.Header>
+            <DataTable.Title textStyle={styles.tableText}>Date</DataTable.Title>
+            <DataTable.Title textStyle={styles.tableText}>Opponent</DataTable.Title>
+            <DataTable.Title textStyle={styles.tableText}>Opp. Rating</DataTable.Title>
+            <DataTable.Title textStyle={styles.tableText}>Result</DataTable.Title>
+          </DataTable.Header>
+          <ScrollView contentContainerStyle={styles.contentContainer}>
+            {
+              props.games.map((game, index) => {
+                return(
+                  <DataTable.Row style={[styles.row, index % 2 && styles.colorSwitch]} key={index}>
+                    <DataTable.Cell > {game.date} </DataTable.Cell>
+                    <DataTable.Cell> {game.opponent} </DataTable.Cell>
+                    <DataTable.Cell > {game.opponentRating} </DataTable.Cell>
+                    <DataTable.Cell> {JSON.stringify(game.win)} </DataTable.Cell>
+                  </DataTable.Row>
+                )
+              })
+            }
+
+          
+          </ScrollView>
+        </DataTable>
       </View>
   )
 }
@@ -56,18 +43,17 @@ const GameTable = props => {
 const styles = StyleSheet.create({
   table: {
     flex: 9,
-    backgroundColor: 'blue',
-    width: '80%',
-    alignItems: 'center'
+    backgroundColor: 'powderblue',
+    width: '90%',
+    alignItems: 'center',
+    //alignSelf: 'stretch'
   },
-  header: {
-    height: 50,
-    backgroundColor: '#ffffff',
-    width: '100%'
+  contentContainer: {
+    paddingBottom: 50
   },
   tableText: {
     textAlign: 'center',
-    fontWeight: '200'
+    fontWeight: 'bold'
   },
   tableBorder: {
     borderColor: '#C1C0B9'

@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, Text, View, FlatList, ScrollView} from 'react-native';
+import {StyleSheet, Text, View, FlatList, ScrollView, TouchableOpacity} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
+import {useNavigation} from '@react-navigation/native';
 import GameTable from './GameTable.js';
 import {myIP} from '@env';
 
@@ -13,25 +13,39 @@ import axios from 'axios';
 const GameHistory = props => {
   console.log('props.route.params', props.route.params);
   const [games, setGames] = useState([]);
+  const [error, markError] = useState(false);
+  const navigation = useNavigation();
 
   useEffect(() => {
     axios.get(myIP + '/users/gameHistory', {
       params: {
-        userId: props.route.params.id
+        userId: props.route.params.id,
+        username: props.route.params.name
       }
     })
     .then(response => {
       console.log('Response from Game History get request', response.data);
+      setGames(response.data);
+      //markError(false);
     })
-  })
+    .catch((err) => {
+      markError(true);
+    })
+  }, []);
 
   return (
     <SafeAreaView style={styles.gameHistory}>
       <View style={styles.ratingHeader}>
-        <Text style={styles.rating}>Rating: {props.route.params.rating}</Text>
+        <Text style={styles.rating}>Elo Rating: {props.route.params.rating}</Text>
       </View>
       <GameTable games={games}/>
-
+      <TouchableOpacity
+        style={[styles.infoBarChild]}
+        onPress={() => {
+          navigation.navigate('LandingPage');
+        }}>
+        <Text style={styles.childText}> Home </Text>
+      </TouchableOpacity>
     </SafeAreaView>
   )
 }
@@ -43,6 +57,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 20,
   },
+  infoBarChild: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 5,
+    borderRadius: 10,
+    backgroundColor: '#5d9db9',
+  },
   ratingHeader: {
     flex: 1,
     borderRadius: 10
@@ -51,7 +72,6 @@ const styles = StyleSheet.create({
     margin: 10,
     marginLeft: 40,
     marginRight: 40,
-    color: 'red',
     fontSize: 30
   }
 })
