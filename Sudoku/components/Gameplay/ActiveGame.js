@@ -31,6 +31,7 @@ class ActiveGame extends React.Component {
       timerID: 0,
       loadingScreen: false,
       gameId: 0,
+      boardId: 0,
       gameStatus: '',
       userInfo: props.route.params,
       newRating: 0
@@ -76,12 +77,15 @@ class ActiveGame extends React.Component {
           let currentState = JSON.parse(response.boardState);
           let numHoles = parseInt(response.holes);
           let gameId = parseInt(response.game_id);
+          let boardId = parseInt(response.board_id);
+          let oppBoardId = parseInt(response.opp_board_id);
           this.setState({
             currentBoard: currentState,
             solutionBoard: solution,
             answerableCells: currentState,
             tilesLeft: numHoles,
-            gameId: gameId
+            gameId: gameId,
+            boardId: boardId
           });
           let info = {
             opponent: this.opponent,
@@ -89,13 +93,16 @@ class ActiveGame extends React.Component {
             solutionBoard: solution,
             tilesLeft: numHoles,
             answerableCells: currentState,
-            gameId: gameId
-          }
+            gameId: gameId,
+            boardId: oppBoardId
+          };
           this.socket.emit('gameRecordCreated', info);
         })
       });
 
+      //Sending it to both people in server
       this.socket.on('startGame', (info) => {
+        console.log(this.state.userInfo.name, "Received startGame");
         this.setState({loadingScreen: false});
         //Start timer
         const timerID = setInterval(() => {
@@ -108,7 +115,8 @@ class ActiveGame extends React.Component {
           answerableCells: info.answerableCells,
           tilesLeft: info.tilesLeft,
           timerID: timerID,
-          gameId: info.gameId
+          gameId: info.gameId,
+          boardId: info.boardId
         });
       });
     } else {
@@ -121,14 +129,13 @@ class ActiveGame extends React.Component {
       .then(board => {
         if(board.data === 'You lost') {
           throw new Error(board.data);
-        } 
+        }
         let temp = JSON.parse(JSON.stringify(board.data));
         let solution = JSON.parse(temp.board_solution);
         let boardState = JSON.parse(temp.board_state);
         let answerableCells = JSON.parse(temp.answerable_cells);
         let numHoles = parseInt(temp.holes);
         let gameId = parseInt(temp.game_id);
-
         const timerID = setInterval(() => {
           let currTime = this.state.time + 1;
           this.setState({time: currTime});
@@ -226,7 +233,7 @@ class ActiveGame extends React.Component {
     } else {
       axios.put(myIP + '/games/finishGame', {
         params: {
-          boardId: this.state.userInfo.board_id,
+          boardId: this.state.boardId,
           gameId: this.state.gameId,
           userId: this.state.userInfo.id,
         }
